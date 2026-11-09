@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CYBERLIFE // RPG-Система</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#0b0e14',
+                            card: '#121722',
+                            cardHover: '#171e2c',
+                            border: '#1f293a',
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            amber: '#f59e0b',
+                            crimson: '#ef4444',
+                            purple: '#8b5cf6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0b0e14;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 92px; /* Space for fixed bottom nav */
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.07) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        /* Subtle scanline & grid texture */
+        .cyber-grid {
+            background-size: 24px 24px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0e14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f293a;
+            border-radius: 4px;
+        }
+
+        /* Tactile button press */
+        .btn-tactile {
+            transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .btn-tactile:active {
+            transform: scale(0.96);
+        }
+
+        /* Glow accents */
+        .glow-emerald {
+            box-shadow: 0 0 18px -4px rgba(16, 185, 129, 0.35);
+        }
+        .glow-amber {
+            box-shadow: 0 0 18px -4px rgba(245, 158, 11, 0.35);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 18px -4px rgba(6, 182, 212, 0.35);
+        }
+        .glow-crimson {
+            box-shadow: 0 0 18px -4px rgba(239, 68, 68, 0.35);
+        }
+
+        /* Animations */
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.65; }
+        }
+        .animate-pulse-slow {
+            animation: pulseSlow 2.8s infinite ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.22s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="cyber-grid select-none">
+
+    <!-- ==================== STICKY TOP HUD HEADER ==================== -->
+    <header class="sticky top-0 z-30 bg-[#0b0e14]/90 backdrop-blur-md border-b border-cyber-border px-3.5 pt-3 pb-2.5">
+        <div class="max-w-md mx-auto">
+            <!-- Top Row: Avatar/Level + Rank + Currency & Streak -->
+            <div class="flex items-center justify-between gap-2">
+                <!-- Left: Level & Rank -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div id="hud-level-badge" class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 flex flex-col items-center justify-center shrink-0 glow-emerald">
+                        <span class="text-[9px] font-mono uppercase tracking-wider text-emerald-400 leading-none">LVL</span>
+                        <span id="hud-level" class="text-lg font-mono font-extrabold text-white leading-tight">1</span>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">OP // ЛЕВОН</span>
+                            <button id="sound-toggle-btn" onclick="toggleSound()" class="text-slate-500 hover:text-slate-300 text-xs px-1" title="Звук интерфейса">
+                                <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                            </button>
+                        </div>
+                        <h1 id="hud-rank" class="text-sm font-bold text-white truncate mt-0.5">Скрипт-кидди</h1>
+                    </div>
+                </div>
+
+                <!-- Right: Streak, Shield & PTS Balance -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <!-- Streak Freeze Shield Indicator -->
+                    <div id="hud-shield" class="hidden items-center gap-1 px-2 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-xs font-mono" title="Активен щит заморозки стрика">
+                        <i class="fa-solid fa-shield-halved text-cyan-400"></i>
+                        <span>ЩИТ</span>
+                    </div>
+
+                    <!-- Streak Pill -->
+                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-cyber-card border border-cyber-border" title="Дней в стрике (нужно минимум 3 дейлика в день)">
+                        <i id="streak-flame" class="fa-solid fa-fire-flame-curved text-orange-500 text-sm"></i>
+                        <span id="hud-streak" class="font-mono font-bold text-xs text-white">0</span>
+                    </div>
+
+                    <!-- PTS Balance Pill -->
+                    <button onclick="switchMainTab('shop')" class="btn-tactile flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/40 glow-amber">
+                        <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                        <span id="hud-pts" class="font-mono font-extrabold text-sm text-amber-300">0</span>
+                        <span class="text-[10px] font-mono text-amber-400/80">PTS</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Row: XP Bar & Daily Quota Counter -->
+            <div class="mt-2.5">
+                <div class="flex justify-between items-center text-[11px] font-mono mb-1">
+                    <span class="text-slate-400">ОПЫТ СИСТЕМЫ: <strong id="hud-xp-current" class="text-emerald-400">0</strong> / <span id="hud-xp-next">200</span> XP</span>
+                    <span id="hud-daily-quota" class="text-cyan-400">База дня: 0/6</span>
+                </div>
+                <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-[1px]">
+                    <div id="hud-xp-bar" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== NEW DAY BANNER (AUTO-DETECT) ==================== -->
+    <div id="new-day-banner" class="hidden max-w-md mx-auto px-3.5 mt-3">
+        <div class="p-3 rounded-2xl bg-gradient-to-r from-cyan-950/80 to-emerald-950/80 border border-cyan-500/40 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-300 shrink-0">
+                    <i class="fa-solid fa-rotate"></i>
+                </div>
+                <div>
+                    <div class="text-xs font-bold text-white">Новый цикл обнаружен</div>
+                    <div class="text-[11px] text-slate-300">Обновить дейлики и зафиксировать стрик?</div>
+                </div>
+            </div>
+            <button onclick="openEndDayModal()" class="btn-tactile px-3 py-1.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs shrink-0">
+                Обновить
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+    <main class="max-w-md mx-auto px-3.5 pt-3">
+
+        <!-- ================= TAB 1: QUESTS (КВЕСТЫ) ================= -->
+        <section id="tab-quests" class="space-y-3.5 animate-slide-up">
+            <!-- Sub-navigation for Quests -->
+            <div class="flex items-center justify-between gap-2">
+                <div class="grid grid-cols-3 gap-1 p-1 bg-cyber-card border border-cyber-border rounded-xl flex-1">
+                    <button onclick="switchQuestSubTab('daily')" id="qtab-daily" class="btn-tactile py-1.5 px-2 rounded-lg text-xs font-bold transition-all bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        Дейлики
+                    </button>
+                    <button onclick="switchQuestSubTab('weekly')" id="qtab-weekly" class="btn-tactile py-1.5 px-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+                        Виклики
+                    </button>
+                    <button onclick="switchQuestSubTab('story')" id="qtab-story" class="btn-tactile py-1.5 px-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+                        Сюжетка
+                    </button>
+                </div>
+
+                <!-- Add Custom Quest Button -->
+                <button onclick="openAddQuestModal()" class="btn-tactile w-9 h-9 rounded-xl bg-cyber-card border border-cyber-border text-emerald-400 flex items-center justify-center shrink-0 hover:border-emerald-500/50" title="Добавить свой квест">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Context Info Bar based on active Quest Sub-Tab -->
+            <div id="quest-context-bar" class="px-3 py-2.5 rounded-xl bg-cyber-card/90 border border-cyber-border flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-emerald-400 text-xs"></i>
+                    <span id="quest-context-text" class="text-xs text-slate-300">Закрой минимум <strong class="text-white">3 дейлика</strong> для удержания стрика</span>
+                </div>
+                <button id="quest-context-action" onclick="openEndDayModal()" class="btn-tactile px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-mono text-cyan-300 border border-cyan-500/30 shrink-0">
+                    Завершить день
+                </button>
+            </div>
+
+            <!-- Quests List Container -->
+            <div id="quests-list" class="space-y-2.5">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: SHOP & INVENTORY (МАГАЗИН) ================= -->
+        <section id="tab-shop" class="hidden space-y-3.5 animate-slide-up">
+            <!-- Sub-navigation: Витрина vs Инвентарь -->
+            <div class="flex items-center justify-between gap-2">
+                <div class="grid grid-cols-2 gap-1 p-1 bg-cyber-card border border-cyber-border rounded-xl flex-1">
+                    <button onclick="switchShopSubTab('store')" id="stab-store" class="btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <i class="fa-solid fa-cart-shopping mr-1"></i> Витрина
+                    </button>
+                    <button onclick="switchShopSubTab('inventory')" id="stab-inventory" class="btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white relative">
+                        <i class="fa-solid fa-box-open mr-1"></i> Инвентарь
+                        <span id="inventory-badge" class="hidden ml-1 px-1.5 py-0.2 rounded-full bg-emerald-500 text-slate-950 font-mono text-[10px] font-extrabold">0</span>
+                    </button>
+                </div>
+
+                <!-- Add Custom Reward Button -->
+                <button onclick="openAddRewardModal()" class="btn-tactile w-9 h-9 rounded-xl bg-cyber-card border border-cyber-border text-amber-400 flex items-center justify-center shrink-0 hover:border-amber-500/50" title="Добавить свою награду">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Shop Storefront View -->
+            <div id="shop-store-view" class="space-y-4">
+                <!-- Category Filter Pills -->
+                <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                    <button onclick="filterShopCategory('all')" id="scat-all" class="btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-slate-800 text-white border border-slate-600">
+                        Все лоты
+                    </button>
+                    <button onclick="filterShopCategory('boost')" id="scat-boost" class="btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-cyber-card text-slate-400 border border-cyber-border">
+                        ⚡ Бусты (80-150)
+                    </button>
+                    <button onclick="filterShopCategory('chill')" id="scat-chill" class="btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-cyber-card text-slate-400 border border-cyber-border">
+                        🎮 Сессии (250-400)
+                    </button>
+                    <button onclick="filterShopCategory('epic')" id="scat-epic" class="btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-cyber-card text-slate-400 border border-cyber-border">
+                        💎 Эпик лут (1000+)
+                    </button>
+                </div>
+
+                <div id="shop-items-list" class="space-y-2.5">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Inventory View (Bought Coupons) -->
+            <div id="shop-inventory-view" class="hidden space-y-2.5">
+                <div class="p-3 rounded-xl bg-cyber-card border border-cyber-border text-xs text-slate-300 flex items-center gap-2.5">
+                    <i class="fa-solid fa-ticket text-amber-400 text-base"></i>
+                    <span>Купленные награды попадают сюда как купоны. Жми <strong>«Активировать»</strong>, когда реально забираешь награду в жизни.</span>
+                </div>
+                <div id="inventory-items-list" class="space-y-2.5">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: CHARACTER & STATS (ПЕРСОНАЖ) ================= -->
+        <section id="tab-stats" class="hidden space-y-4 animate-slide-up">
+            <!-- Character Hero Card -->
+            <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-28 h-28 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-cyan-400">ПРОФИЛЬ ОПЕРАТОРА</span>
+                        <h2 class="text-lg font-extrabold text-white mt-0.5">Левон // Кибербез-Трек</h2>
+                        <p id="profile-rank-subtitle" class="text-xs font-mono text-emerald-400">Ранг: Скрипт-кидди (Уровень 1)</p>
+                    </div>
+                    <div class="text-right font-mono">
+                        <div class="text-[10px] text-slate-400">ВСЕГО ОПЫТА</div>
+                        <div id="profile-total-xp" class="text-base font-bold text-white">0 XP</div>
+                        <div class="text-[10px] text-slate-400 mt-1">ЗАКРЫТО ЗАДАЧ</div>
+                        <div id="profile-quests-done" class="text-xs font-bold text-cyan-400">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Core RPG Attributes Grid -->
+            <div>
+                <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-2 px-1">Характеристики (Статы)</h3>
+                <div class="grid grid-cols-2 gap-2.5" id="stats-cards-grid">
+                    <!-- Populated via JS: INT, TECH, VIT, DISC -->
+                </div>
+            </div>
+
+            <!-- Energy Drink Budget & Telemetry Module -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-[#121926] to-[#0f1722] border border-emerald-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i class="fa-solid fa-battery-bolt"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wide">Контроль Энергосов</h3>
+                            <p class="text-[11px] text-slate-400">Анти-слив бюджета на автопилоте</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                        ~<span id="can-price-label">135</span> ₽ / банка
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-1">
+                    <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
+                        <div class="text-[10px] font-mono text-slate-400">ЧИСТЫХ ДНЕЙ</div>
+                        <div id="energy-clean-days" class="text-base font-mono font-extrabold text-emerald-400 mt-0.5">0</div>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
+                        <div class="text-[10px] font-mono text-slate-400">СЭКОНОМЛЕНО</div>
+                        <div id="energy-saved-rub" class="text-base font-mono font-extrabold text-amber-400 mt-0.5">0 ₽</div>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-center">
+                        <div class="text-[10px] font-mono text-slate-400">ПО ЛИЦЕНЗИИ</div>
+                        <div id="energy-licensed-used" class="text-base font-mono font-extrabold text-cyan-400 mt-0.5">0 шт</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity History Log -->
+            <div>
+                <div class="flex items-center justify-between mb-2 px-1">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400">Журнал операций</h3>
+                    <span class="text-[10px] font-mono text-slate-500">Последние 25 записей</span>
+                </div>
+                <div id="activity-log-list" class="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: SYSTEM (СИСТЕМА) ================= -->
+        <section id="tab-system" class="hidden space-y-3.5 animate-slide-up">
+            <!-- Cycle Management Card -->
+            <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border space-y-3">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
+                    <h3 class="text-sm font-bold text-white">Управление циклами</h3>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Завершай день вручную перед сном (даже если уже за полночь). Если закрыто <strong>3+ дейлика</strong> (или активен Щит), стрик растёт, а галочки дейликов сбрасываются на новый день.
+                </p>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="openEndDayModal()" class="btn-tactile py-2.5 px-3 rounded-xl bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-moon"></i> Завершить день
+                    </button>
+                    <button onclick="resetWeekliesPrompt()" class="btn-tactile py-2.5 px-3 rounded-xl bg-purple-500/15 border border-purple-500/40 text-purple-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-calendar-week"></i> Сброс викликов
+                    </button>
+                </div>
+            </div>
+
+            <!-- Energy Drink Price Calibration -->
+            <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-white">Средняя цена банки энергоса (₽)</span>
+                    <input id="input-can-price" type="number" min="50" max="500" onchange="updateCanPrice(this.value)" class="w-24 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 font-mono text-xs text-emerald-400 text-right focus:outline-none focus:border-emerald-500">
+                </div>
+                <p class="text-[11px] text-slate-400">Используется для подсчёта сэкономленных денег за каждый закрытый дейлик «Чистый день без слива на энергосы».</p>
+            </div>
+
+            <!-- Backup Export / Import -->
+            <div class="p-4 rounded-2xl bg-cyber-card border border-cyber-border space-y-3">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-database text-emerald-400"></i>
+                    <h3 class="text-sm font-bold text-white">Резервная копия (JSON Бэкап)</h3>
+                </div>
+                <p class="text-xs text-slate-400">
+                    Все данные хранятся в памяти браузера телефона. Скопируй код бэкапа в заметки, чтобы не потерять прогресс при очистке кэша.
+                </p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="exportBackup()" class="btn-tactile py-2.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Скопировать код
+                    </button>
+                    <button onclick="openImportModal()" class="btn-tactile py-2.5 px-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-file-import"></i> Восстановить
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="p-4 rounded-2xl bg-red-950/20 border border-red-500/30 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xs font-bold text-red-400 uppercase">Полный сброс системы</h3>
+                        <p class="text-[11px] text-slate-400">Обнулить уровни, очки и вернуть стартовые настройки</p>
+                    </div>
+                    <button onclick="openHardResetModal()" class="btn-tactile px-3 py-2 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-bold shrink-0">
+                        Сбросить
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FIXED BOTTOM NAVIGATION BAR ==================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-[#0b0e14]/95 backdrop-blur-md border-t border-cyber-border px-2 py-1.5">
+        <div class="max-w-md mx-auto grid grid-cols-4 gap-1">
+            <button onclick="switchMainTab('quests')" id="nav-quests" class="btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10">
+                <i class="fa-solid fa-list-check text-base"></i>
+                <span class="text-[10px] font-bold mt-1">Квесты</span>
+            </button>
+            <button onclick="switchMainTab('shop')" id="nav-shop" class="btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 relative">
+                <i class="fa-solid fa-store text-base"></i>
+                <span class="text-[10px] font-bold mt-1">Магазин</span>
+                <span id="nav-inv-dot" class="hidden absolute top-1.5 right-6 w-2 h-2 rounded-full bg-amber-400"></span>
+            </button>
+            <button onclick="switchMainTab('stats')" id="nav-stats" class="btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400">
+                <i class="fa-solid fa-microchip text-base"></i>
+                <span class="text-[10px] font-bold mt-1">Персонаж</span>
+            </button>
+            <button onclick="switchMainTab('system')" id="nav-system" class="btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400">
+                <i class="fa-solid fa-sliders text-base"></i>
+                <span class="text-[10px] font-bold mt-1">Система</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+    <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-sm pointer-events-none space-y-2"></div>
+
+    <!-- ==================== UNIVERSAL MODAL OVERLAY ==================== -->
+    <div id="modal-overlay" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div id="modal-content" class="w-full max-w-sm rounded-2xl bg-cyber-card border border-cyber-border p-4 shadow-2xl space-y-4 animate-slide-up">
+            <!-- Dynamically populated modal content -->
+        </div>
+    </div>
+
+    <!-- ==================== APPLICATION LOGIC ==================== -->
+    <script>
+        const STORAGE_KEY = 'cyberlife_rpg_levon_v1';
+
+        // Rank ladder based on Level
+        const RANKS = [
+            { minLvl: 1,  title: 'Скрипт-кидди' },
+            { minLvl: 3,  title: 'Дебаггер будней' },
+            { minLvl: 5,  title: 'Ночной кодер' },
+            { minLvl: 8,  title: 'Оператор терминала' },
+            { minLvl: 12, title: 'Перехватчик пакетов' },
+            { minLvl: 16, title: 'Инженер эксплойтов' },
+            { minLvl: 20, title: 'Архитектор систем' },
+            { minLvl: 25, title: 'Кибербез-адепт' },
+            { minLvl: 30, title: 'Повелитель Рута (ROOT)' }
+        ];
+
+        // Attribute Metadata
+        const STAT_META = {
+            INT:  { name: 'Интеллект (INT)', desc: 'ЕГЭ: Профиль, Инфа, Русский', color: 'text-cyan-400', bg: 'bg-cyan-500/15', border: 'border-cyan-500/30', bar: 'bg-cyan-400', icon: 'fa-brain' },
+            TECH: { name: 'Техника (TECH)',  desc: 'Кодинг, монтаж, DIY-железо', color: 'text-emerald-400', bg: 'bg-emerald-500/15', border: 'border-emerald-500/30', bar: 'bg-emerald-400', icon: 'fa-code' },
+            VIT:  { name: 'Форма (VIT)',     desc: 'Домашний спорт, режим, тонус', color: 'text-rose-400', bg: 'bg-rose-500/15', border: 'border-rose-500/30', bar: 'bg-rose-400', icon: 'fa-dumbbell' },
+            DISC: { name: 'Дисциплина (DISC)', desc: 'Стрик, воля, контроль бюджета', color: 'text-amber-400', bg: 'bg-amber-500/15', border: 'border-amber-500/30', bar: 'bg-amber-400', icon: 'fa-shield-halved' }
+        };
+
+        // Default Initial State
+        function getDefaultState() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            return {
+                xp: 0,
+                pts: 0,
+                streak: 0,
+                streakShield: false,
+                soundEnabled: true,
+                lastActiveDate: todayStr,
+                canPriceRub: 135,
+                energyStats: {
+                    cleanDays: 0,
+                    licensedUsed: 0
+                },
+                stats: {
+                    INT: 0,
+                    TECH: 0,
+                    VIT: 0,
+                    DISC: 0
+                },
+                questsCompletedCount: 0,
+                quests: [
+                    // ДЕЙЛИКИ (Daily)
+                    {
+                        id: 'd_math',
+                        type: 'daily',
+                        title: 'ЕГЭ: Профильная математика',
+                        desc: 'Разбор задач 1-й или 2-й части без подсказок и шпор',
+                        pts: 25,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'd_inf',
+                        type: 'daily',
+                        title: 'ЕГЭ: Информатика (КЭГЭ)',
+                        desc: 'Кодинг на Python / разбор алгоритмических задач',
+                        pts: 25,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'd_rus',
+                        type: 'daily',
+                        title: 'ЕГЭ: Русский язык',
+                        desc: 'Отработка тестового блока или структуры сочинения',
+                        pts: 20,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'd_vit',
+                        type: 'daily',
+                        title: 'Домашняя форма и уход',
+                        desc: 'Силовая/функциональная тренировка дома + базовый уход',
+                        pts: 20,
+                        stat: 'VIT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'd_tech',
+                        type: 'daily',
+                        title: 'Свой скилл / Проект',
+                        desc: 'Монтаж в DaVinci, кодинг, перевод или ковыряние железа',
+                        pts: 20,
+                        stat: 'TECH',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'd_no_energy',
+                        type: 'daily',
+                        title: 'Чистый день без слива на энергосы',
+                        desc: 'Не покупать банку на автопилоте без активированного купона',
+                        pts: 15,
+                        stat: 'DISC',
+                        done: false,
+                        isCustom: false,
+                        isEnergyCleanQuest: true
+                    },
+
+                    // ВИКЛИКИ (Weekly)
+                    {
+                        id: 'w_mock',
+                        type: 'weekly',
+                        title: 'Полный пробник на время',
+                        desc: 'Написать честный вариант (Профиль / Инфа / Русский) по таймеру',
+                        pts: 150,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'w_school',
+                        type: 'weekly',
+                        title: 'Зачистка школьных хвостов',
+                        desc: 'Закрыть обязательные домашки и таски репетиторов за неделю',
+                        pts: 120,
+                        stat: 'DISC',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'w_workout3',
+                        type: 'weekly',
+                        title: 'Сплит из 3 домашних тренировок',
+                        desc: 'Выполнить минимум 3 плотные сессии за неделю без пропусков',
+                        pts: 100,
+                        stat: 'VIT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 'w_project',
+                        type: 'weekly',
+                        title: 'Продвинуть личный проект',
+                        desc: 'Закончить заметный этап в видеомонтаже, софте или DIY-железке',
+                        pts: 120,
+                        stat: 'TECH',
+                        done: false,
+                        isCustom: false
+                    },
+
+                    // СЮЖЕТКА (Storyline / Bosses)
+                    {
+                        id: 's_act1',
+                        type: 'story',
+                        title: 'Акт I: Железная база',
+                        desc: 'Стабильно забирать 100% первой части Профиля и базовый пул Инфы',
+                        pts: 350,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 's_act2',
+                        type: 'story',
+                        title: 'Акт II: Взлом сложных номеров',
+                        desc: 'Уверенно щелкать задачи 2-й части Профиля и 24–27 номера Инфы',
+                        pts: 450,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 's_act3',
+                        type: 'story',
+                        title: 'Акт III: Рубеж 80+ баллов',
+                        desc: 'Пробить планку 80+ на контрольных пробниках по профильным предметам',
+                        pts: 500,
+                        stat: 'DISC',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 's_sideboss',
+                        type: 'story',
+                        title: 'Сайд-босс: Кастомный билд',
+                        desc: 'Довести до релиза крупный личный проект (железо / софт / монтаж)',
+                        pts: 400,
+                        stat: 'TECH',
+                        done: false,
+                        isCustom: false
+                    },
+                    {
+                        id: 's_final',
+                        type: 'story',
+                        title: 'Финальный Босс: ЕГЭ и Кибербез',
+                        desc: 'Сдать экзамены на целевой балл и залететь на ИБ / Кибербез',
+                        pts: 1000,
+                        stat: 'INT',
+                        done: false,
+                        isCustom: false
+                    }
+                ],
+                shop: [
+                    // Расходники и бусты (80-150)
+                    {
+                        id: 'r_energy_std',
+                        category: 'boost',
+                        title: 'Лицензия на банку (Classic Buff)',
+                        desc: 'Легальная банка энергоса чисто в кайф после закрытия базы дня',
+                        cost: 95,
+                        icon: 'fa-bolt',
+                        isEnergyCoupon: true,
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_energy_oc',
+                        category: 'boost',
+                        title: 'Оверклок-пак (Ночной завоз)',
+                        desc: 'Банка под плотный кодинг, монтаж или штурм 2-й части без чувства вины',
+                        cost: 145,
+                        icon: 'fa-fire',
+                        isEnergyCoupon: true,
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_game_session',
+                        category: 'boost',
+                        title: 'Сессия в соло-тайтл (1.5 часа)',
+                        desc: 'Катка на PS3, PSP или ПК (BG3 и др.) с чистой совестью',
+                        cost: 90,
+                        icon: 'fa-gamepad',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_chill_40',
+                        category: 'boost',
+                        title: 'Право на тупняк (40 минут)',
+                        desc: 'Легально лежать на кровати и тупить в потолок посреди дня',
+                        cost: 80,
+                        icon: 'fa-couch',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_music_dig',
+                        category: 'boost',
+                        title: 'Музыкальный / YouTube рейд (1 ч)',
+                        desc: 'Копание в новых релизах, андерграунд-сетах или обзорах железа',
+                        cost: 85,
+                        icon: 'fa-headphones',
+                        isCustom: false
+                    },
+
+                    // Сессионный чилл (250-400)
+                    {
+                        id: 'r_anime_night',
+                        category: 'chill',
+                        title: 'Запойный вечер (Аниме / Кино / Манга)',
+                        desc: 'Вечер марафона тайтла или чтения томов залпом без таймеров',
+                        cost: 280,
+                        icon: 'fa-tv',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_friends_out',
+                        category: 'chill',
+                        title: 'Вылазка с кентами / Стритфуд',
+                        desc: 'Посиделки, катки с пацанами или стритфуд без удара по режиму',
+                        cost: 350,
+                        icon: 'fa-burger',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_cook_spec',
+                        category: 'chill',
+                        title: 'Кулинарный спецзаказ',
+                        desc: 'Приготовить дома что-то мощное, мясное и острое под себя',
+                        cost: 250,
+                        icon: 'fa-utensils',
+                        isCustom: false
+                    },
+
+                    // Эпический лут (1000-1500)
+                    {
+                        id: 'r_cheat_day',
+                        category: 'epic',
+                        title: 'Легальный Чит-дей (Щит Стрика)',
+                        desc: 'Полный выходной от ЕГЭ и рутины + активация щита заморозки стрика',
+                        cost: 1000,
+                        icon: 'fa-shield-halved',
+                        isShieldCoupon: true,
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_cd_disc',
+                        category: 'epic',
+                        title: 'Новый CD / бутлег на полку',
+                        desc: 'Право заказать физический диск любимого релиза в коллекцию',
+                        cost: 1200,
+                        icon: 'fa-compact-disc',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_diy_parts',
+                        category: 'epic',
+                        title: 'Деталь / расходники под DIY-железо',
+                        desc: 'Заказ модулей, переходников или компонентов под свои сборки',
+                        cost: 1300,
+                        icon: 'fa-screwdriver-wrench',
+                        isCustom: false
+                    },
+                    {
+                        id: 'r_wardrobe',
+                        category: 'epic',
+                        title: 'Дроп в гардероб',
+                        desc: 'Покупка шмотки или аксессуара из вишлиста за закрытую планку',
+                        cost: 1500,
+                        icon: 'fa-shirt',
+                        isCustom: false
+                    }
+                ],
+                inventory: [],
+                logs: [
+                    {
+                        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+                        text: 'Система инициализирована. Добро пожаловать, Левон.',
+                        type: 'info'
+                    }
+                ]
+            };
+        }
+
+        // Current Application State & UI View State
+        let state = loadState();
+        let activeMainTab = 'quests';
+        let activeQuestSubTab = 'daily';
+        let activeShopSubTab = 'store';
+        let activeShopCategory = 'all';
+
+        // Load from LocalStorage
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return getDefaultState();
+                const parsed = JSON.parse(raw);
+                return { ...getDefaultState(), ...parsed };
+            } catch (e) {
+                console.error('Ошибка чтения сохранения:', e);
+                return getDefaultState();
+            }
+        }
+
+        // Save to LocalStorage
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.error('Ошибка сохранения:', e);
+            }
+        }
+
+        // Web Audio API Synth for tactile RPG sounds
+        let audioCtx = null;
+        function playSound(type) {
+            if (!state.soundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+                if (type === 'complete') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.07); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.14); // G5
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+                    osc.start(now);
+                    osc.stop(now + 0.28);
+                } else if (type === 'buy') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.setValueAtTime(880, now + 0.08);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'levelup') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.08);
+                    osc.frequency.setValueAtTime(659.25, now + 0.16);
+                    osc.frequency.setValueAtTime(880, now + 0.24);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+                    osc.start(now);
+                    osc.stop(now + 0.45);
+                } else if (type === 'undo') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(320, now);
+                    osc.frequency.setValueAtTime(220, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                    osc.start(now);
+                    osc.stop(now + 0.18);
+                }
+            } catch (e) {
+                // Ignore audio errors on restricted devices
+            }
+        }
+
+        function toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            saveState();
+            renderHUD();
+            showToast(state.soundEnabled ? 'Звук терминала включен' : 'Звук отключен', 'info');
+        }
+
+        // Level & Rank calculation (Every 200 XP = +1 Level, scaling gently)
+        function getLevelInfo(xp) {
+            const level = Math.floor(xp / 200) + 1;
+            const currentLevelXp = xp % 200;
+            const neededXp = 200;
+            const percent = Math.min(100, Math.round((currentLevelXp / neededXp) * 100));
+
+            let rankTitle = RANKS[0].title;
+            for (const r of RANKS) {
+                if (level >= r.minLvl) rankTitle = r.title;
+            }
+            return { level, currentLevelXp, neededXp, percent, rankTitle };
+        }
+
+        // Add Log Entry
+        function addLog(text, type = 'info') {
+            const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            state.logs.unshift({ time, text, type });
+            if (state.logs.length > 25) state.logs.pop();
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'emerald') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let colors = 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200';
+            let icon = 'fa-circle-check text-emerald-400';
+
+            if (type === 'amber') {
+                colors = 'bg-amber-950/95 border-amber-500/50 text-amber-200';
+                icon = 'fa-coins text-amber-400';
+            } else if (type === 'cyan') {
+                colors = 'bg-cyan-950/95 border-cyan-500/50 text-cyan-200';
+                icon = 'fa-bolt text-cyan-400';
+            } else if (type === 'crimson') {
+                colors = 'bg-red-950/95 border-red-500/50 text-red-200';
+                icon = 'fa-triangle-exclamation text-red-400';
+            } else if (type === 'info') {
+                colors = 'bg-slate-900/95 border-slate-700 text-slate-200';
+                icon = 'fa-terminal text-cyan-400';
+            }
+
+            toast.className = `px-3.5 py-2.5 rounded-xl border backdrop-blur-md shadow-lg flex items-center gap-2.5 text-xs font-medium animate-slide-up ${colors}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-sm shrink-0"></i><span>${message}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.2s ease';
+                setTimeout(() => toast.remove(), 200);
+            }, 2400);
+        }
+
+        // ==================== RENDER FUNCTIONS ====================
+
+        function renderAll() {
+            renderHUD();
+            renderQuests();
+            renderShop();
+            renderStatsAndLogs();
+            renderSystemInputs();
+            checkDateRolloverBanner();
+        }
+
+        function renderHUD() {
+            const lvlInfo = getLevelInfo(state.xp);
+            document.getElementById('hud-level').textContent = lvlInfo.level;
+            document.getElementById('hud-rank').textContent = lvlInfo.rankTitle;
+            document.getElementById('hud-pts').textContent = state.pts;
+            document.getElementById('hud-streak').textContent = state.streak;
+
+            document.getElementById('hud-xp-current').textContent = lvlInfo.currentLevelXp;
+            document.getElementById('hud-xp-next').textContent = lvlInfo.neededXp;
+            document.getElementById('hud-xp-bar').style.width = `${lvlInfo.percent}%`;
+
+            // Daily Quota
+            const dailies = state.quests.filter(q => q.type === 'daily');
+            const doneDailies = dailies.filter(q => q.done).length;
+            const quotaEl = document.getElementById('hud-daily-quota');
+            quotaEl.textContent = `База дня: ${doneDailies}/${dailies.length}`;
+            quotaEl.className = doneDailies >= 3 ? 'text-emerald-400 font-bold' : 'text-cyan-400';
+
+            // Streak Shield indicator
+            const shieldEl = document.getElementById('hud-shield');
+            if (state.streakShield) {
+                shieldEl.classList.remove('hidden');
+                shieldEl.classList.add('flex');
+            } else {
+                shieldEl.classList.add('hidden');
+                shieldEl.classList.remove('flex');
+            }
+
+            // Sound icon
+            const soundIcon = document.getElementById('sound-icon');
+            soundIcon.className = state.soundEnabled ? 'fa-solid fa-volume-high text-emerald-400' : 'fa-solid fa-volume-xmark text-slate-600';
+
+            // Inventory badge
+            const invCount = state.inventory.length;
+            const invBadge = document.getElementById('inventory-badge');
+            const navDot = document.getElementById('nav-inv-dot');
+            if (invCount > 0) {
+                invBadge.textContent = invCount;
+                invBadge.classList.remove('hidden');
+                navDot.classList.remove('hidden');
+            } else {
+                invBadge.classList.add('hidden');
+                navDot.classList.add('hidden');
+            }
+        }
+
+        function renderQuests() {
+            const listEl = document.getElementById('quests-list');
+            const filtered = state.quests.filter(q => q.type === activeQuestSubTab);
+
+            // Update context bar
+            const contextText = document.getElementById('quest-context-text');
+            const contextAction = document.getElementById('quest-context-action');
+
+            if (activeQuestSubTab === 'daily') {
+                const doneCount = filtered.filter(q => q.done).length;
+                contextText.innerHTML = doneCount >= 3
+                    ? `<span class="text-emerald-400 font-semibold">Норма стрика выполнена (${doneCount}/${filtered.length})!</span>`
+                    : `Закрой минимум <strong class="text-white">3 дейлика</strong> для стрика (${doneCount}/3)`;
+                contextAction.classList.remove('hidden');
+                contextAction.textContent = 'Завершить день';
+                contextAction.onclick = openEndDayModal;
+            } else if (activeQuestSubTab === 'weekly') {
+                contextText.innerHTML = `Еженедельные спринты: усиленный буст <strong class="text-amber-300">PTS</strong> и статов`;
+                contextAction.classList.remove('hidden');
+                contextAction.textContent = 'Сбросить неделю';
+                contextAction.onclick = resetWeekliesPrompt;
+            } else {
+                contextText.innerHTML = `Главные вехи и Боссы на пути в <strong class="text-cyan-300">Кибербез</strong>`;
+                contextAction.classList.add('hidden');
+            }
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `
+                    <div class="p-6 rounded-2xl bg-cyber-card border border-cyber-border text-center text-slate-400 text-xs">
+                        В этой категории пока нет квестов. Нажми «+», чтобы добавить.
+                    </div>`;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(q => {
+                const sm = STAT_META[q.stat] || STAT_META.INT;
+                const isBoss = q.type === 'story';
+
+                return `
+                <div class="p-3.5 rounded-2xl transition-all border ${
+                    q.done 
+                        ? 'bg-[#0e131d]/70 border-emerald-500/25 opacity-70' 
+                        : isBoss 
+                            ? 'bg-gradient-to-r from-[#141a29] to-[#191528] border-purple-500/30 hover:border-purple-400/50' 
+                            : 'bg-cyber-card border-cyber-border hover:border-slate-700'
+                }">
+                    <div class="flex items-start justify-between gap-3">
+                        <!-- Left Check Button + Info -->
+                        <div class="flex items-start gap-3 min-w-0 flex-1">
+                            <button onclick="toggleQuest('${q.id}')" class="btn-tactile mt-0.5 w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
+                                q.done 
+                                    ? 'bg-emerald-500 border-emerald-400 text-slate-950 glow-emerald' 
+                                    : 'bg-slate-900 border-slate-700 text-transparent hover:border-emerald-500/50'
+                            }" title="${q.done ? 'Отменить выполнение' : 'Выполнить квест'}">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </button>
+
+                            <div class="min-w-0 flex-1" onclick="toggleQuest('${q.id}')">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${sm.bg} ${sm.color} border ${sm.border}">
+                                        +1 ${q.stat}
+                                    </span>
+                                    ${isBoss ? `<span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30">БОСС</span>` : ''}
+                                    ${q.isEnergyCleanQuest ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300">+${state.canPriceRub}₽ В БЮДЖЕТ</span>` : ''}
+                                </div>
+                                <h4 class="text-sm font-bold mt-1 leading-snug ${q.done ? 'line-through text-slate-400' : 'text-white'}">${escapeHtml(q.title)}</h4>
+                                <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">${escapeHtml(q.desc)}</p>
+                            </div>
+                        </div>
+
+                        <!-- Right Reward Badge & Delete Custom -->
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <div class="px-2 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs font-extrabold whitespace-nowrap">
+                                +${q.pts} <span class="text-[10px] font-normal">PTS</span>
+                            </div>
+                            ${q.isCustom ? `
+                                <button onclick="deleteCustomQuest('${q.id}')" class="text-slate-500 hover:text-red-400 text-xs px-1" title="Удалить квест">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderShop() {
+            // Storefront
+            const storeList = document.getElementById('shop-items-list');
+            const filteredShop = activeShopCategory === 'all'
+                ? state.shop
+                : state.shop.filter(item => item.category === activeShopCategory);
+
+            storeList.innerHTML = filteredShop.map(item => {
+                const canAfford = state.pts >= item.cost;
+                let catBadge = '⚡ БУСТ';
+                let catColor = 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20';
+                if (item.category === 'chill') {
+                    catBadge = '🎮 СЕССИЯ';
+                    catColor = 'text-purple-300 bg-purple-500/10 border-purple-500/20';
+                } else if (item.category === 'epic') {
+                    catBadge = '💎 ЭПИК ЛУТ';
+                    catColor = 'text-amber-300 bg-amber-500/10 border-amber-500/20';
+                }
+
+                return `
+                <div class="p-3.5 rounded-2xl bg-cyber-card border border-cyber-border flex items-center justify-between gap-3">
+                    <div class="flex items-start gap-3 min-w-0 flex-1">
+                        <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                            <i class="fa-solid ${item.icon || 'fa-gift'} text-base"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${catColor}">${catBadge}</span>
+                                ${item.isCustom ? `
+                                    <button onclick="deleteCustomReward('${item.id}')" class="text-slate-500 hover:text-red-400 text-[11px]" title="Удалить">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <h4 class="text-sm font-bold text-white mt-1 leading-snug">${escapeHtml(item.title)}</h4>
+                            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">${escapeHtml(item.desc)}</p>
+                        </div>
+                    </div>
+
+                    <button onclick="buyReward('${item.id}')" class="btn-tactile px-3 py-2 rounded-xl font-mono text-xs font-extrabold shrink-0 border transition-all ${
+                        canAfford 
+                            ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500/30 glow-amber' 
+                            : 'bg-slate-900 border-slate-800 text-slate-500 opacity-60'
+                    }">
+                        <div>${item.cost}</div>
+                        <div class="text-[9px] font-normal">PTS</div>
+                    </button>
+                </div>`;
+            }).join('');
+
+            // Inventory
+            const invList = document.getElementById('inventory-items-list');
+            if (state.inventory.length === 0) {
+                invList.innerHTML = `
+                    <div class="p-8 rounded-2xl bg-cyber-card border border-cyber-border text-center space-y-2">
+                        <i class="fa-solid fa-box-open text-2xl text-slate-600"></i>
+                        <div class="text-xs font-bold text-slate-300">Инвентарь пуст</div>
+                        <div class="text-[11px] text-slate-500">Зарабатывай PTS на квестах и закупайся купонами на Витрине.</div>
+                    </div>`;
+            } else {
+                invList.innerHTML = state.inventory.map(coupon => `
+                    <div class="p-3.5 rounded-2xl bg-gradient-to-r from-cyber-card to-[#16202e] border border-emerald-500/30 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 shrink-0">
+                                <i class="fa-solid ${coupon.icon || 'fa-ticket'}"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-[10px] font-mono text-emerald-400">КУПОН ДОСТУПЕН // ${coupon.boughtAt}</div>
+                                <h4 class="text-sm font-bold text-white truncate">${escapeHtml(coupon.title)}</h4>
+                                <p class="text-xs text-slate-400 truncate">${escapeHtml(coupon.desc)}</p>
+                            </div>
+                        </div>
+                        <button onclick="useInventoryCoupon('${coupon.uid}')" class="btn-tactile px-3 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shrink-0">
+                            Активировать
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderStatsAndLogs() {
+            const lvlInfo = getLevelInfo(state.xp);
+            document.getElementById('profile-rank-subtitle').textContent = `Ранг: ${lvlInfo.rankTitle} (Уровень ${lvlInfo.level})`;
+            document.getElementById('profile-total-xp').textContent = `${state.xp} XP`;
+            document.getElementById('profile-quests-done').textContent = state.questsCompletedCount;
+
+            // Render 4 Attributes
+            const grid = document.getElementById('stats-cards-grid');
+            grid.innerHTML = Object.keys(STAT_META).map(key => {
+                const val = state.stats[key] || 0;
+                const meta = STAT_META[key];
+                const statLvl = Math.floor(val / 10) + 1;
+                const progress = (val % 10) * 10;
+
+                return `
+                <div class="p-3.5 rounded-2xl bg-cyber-card border border-cyber-border space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="w-7 h-7 rounded-lg ${meta.bg} ${meta.color} border ${meta.border} flex items-center justify-center text-xs">
+                            <i class="fa-solid ${meta.icon}"></i>
+                        </span>
+                        <span class="font-mono text-xs font-extrabold ${meta.color}">LVL ${statLvl} <span class="text-slate-500 font-normal">(${val})</span></span>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-white">${meta.name}</div>
+                        <div class="text-[10px] text-slate-400 truncate">${meta.desc}</div>
+                    </div>
+                    <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                        <div class="h-full ${meta.bar} rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Energy Drink Tracker
+            const cleanDays = state.energyStats.cleanDays || 0;
+            const savedRub = cleanDays * (state.canPriceRub || 135);
+            document.getElementById('can-price-label').textContent = state.canPriceRub || 135;
+            document.getElementById('energy-clean-days').textContent = cleanDays;
+            document.getElementById('energy-saved-rub').textContent = `${savedRub} ₽`;
+            document.getElementById('energy-licensed-used').textContent = `${state.energyStats.licensedUsed || 0} шт`;
+
+            // Activity Log
+            const logEl = document.getElementById('activity-log-list');
+            logEl.innerHTML = state.logs.map(l => {
+                let dotColor = 'bg-slate-500';
+                if (l.type === 'quest') dotColor = 'bg-emerald-400';
+                if (l.type === 'shop') dotColor = 'bg-amber-400';
+                if (l.type === 'use') dotColor = 'bg-cyan-400';
+
+                return `
+                <div class="px-3 py-2 rounded-xl bg-cyber-card/70 border border-cyber-border/70 flex items-center gap-2.5 text-xs">
+                    <span class="w-1.5 h-1.5 rounded-full ${dotColor} shrink-0"></span>
+                    <span class="font-mono text-[10px] text-slate-500 shrink-0">${l.time}</span>
+                    <span class="text-slate-300 truncate">${escapeHtml(l.text)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function renderSystemInputs() {
+            const priceInput = document.getElementById('input-can-price');
+            if (priceInput) priceInput.value = state.canPriceRub || 135;
+        }
+
+        // ==================== CORE ACTIONS ====================
+
+        function toggleQuest(questId) {
+            const q = state.quests.find(item => item.id === questId);
+            if (!q) return;
+
+            const prevLvl = getLevelInfo(state.xp).level;
+
+            if (!q.done) {
+                // Complete quest
+                q.done = true;
+                state.xp += q.pts;
+                state.pts += q.pts;
+                state.stats[q.stat] = (state.stats[q.stat] || 0) + 1;
+                state.questsCompletedCount = (state.questsCompletedCount || 0) + 1;
+
+                if (q.isEnergyCleanQuest) {
+                    state.energyStats.cleanDays = (state.energyStats.cleanDays || 0) + 1;
+                }
+
+                const newLvl = getLevelInfo(state.xp).level;
+                if (newLvl > prevLvl) {
+                    playSound('levelup');
+                    showToast(`НОВЫЙ УРОВЕНЬ: ${newLvl}! (+${q.pts} PTS)`, 'cyan');
+                    addLog(`Повышение до уровня ${newLvl}!`, 'quest');
+                } else {
+                    playSound('complete');
+                    showToast(`Квест закрыт: +${q.pts} PTS и +1 ${q.stat}`, 'emerald');
+                }
+                addLog(`Выполнено: ${q.title} (+${q.pts} PTS)`, 'quest');
+            } else {
+                // Undo quest completion (prevent accidental tap lock)
+                q.done = false;
+                state.xp = Math.max(0, state.xp - q.pts);
+                state.pts = Math.max(0, state.pts - q.pts);
+                state.stats[q.stat] = Math.max(0, (state.stats[q.stat] || 1) - 1);
+                state.questsCompletedCount = Math.max(0, (state.questsCompletedCount || 1) - 1);
+
+                if (q.isEnergyCleanQuest) {
+                    state.energyStats.cleanDays = Math.max(0, (state.energyStats.cleanDays || 1) - 1);
+                }
+
+                playSound('undo');
+                showToast(`Отменено: ${q.title} (-${q.pts} PTS)`, 'info');
+                addLog(`Отмена: ${q.title}`, 'info');
+            }
+
+            saveState();
+            renderAll();
+        }
+
+        function buyReward(itemId) {
+            const item = state.shop.find(r => r.id === itemId);
+            if (!item) return;
+
+            if (state.pts < item.cost) {
+                showToast(`Не хватает ${item.cost - state.pts} PTS. Закрой пару квестов!`, 'crimson');
+                return;
+            }
+
+            state.pts -= item.cost;
+            const coupon = {
+                uid: 'cp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                itemId: item.id,
+                title: item.title,
+                desc: item.desc,
+                icon: item.icon,
+                isEnergyCoupon: !!item.isEnergyCoupon,
+                isShieldCoupon: !!item.isShieldCoupon,
+                boughtAt: new Date().toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' })
+            };
+
+            state.inventory.unshift(coupon);
+            playSound('buy');
+            addLog(`Куплено в инвентарь: ${item.title} (-${item.cost} PTS)`, 'shop');
+            saveState();
+            renderAll();
+            showToast(`В инвентаре: «${item.title}»!`, 'amber');
+        }
+
+        function useInventoryCoupon(uid) {
+            const idx = state.inventory.findIndex(c => c.uid === uid);
+            if (idx === -1) return;
+
+            const coupon = state.inventory[idx];
+            state.inventory.splice(idx, 1);
+
+            if (coupon.isEnergyCoupon) {
+                state.energyStats.licensedUsed = (state.energyStats.licensedUsed || 0) + 1;
+            }
+            if (coupon.isShieldCoupon) {
+                state.streakShield = true;
+            }
+
+            playSound('complete');
+            addLog(`Активирован купон: ${coupon.title}`, 'use');
+            saveState();
+            renderAll();
+            showToast(`Купон «${coupon.title}» активирован! Кайфуй без вины.`, 'cyan');
+        }
+
+        // ==================== DAY ROLLOVER & STREAK LOGIC ====================
+
+        function checkDateRolloverBanner() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const banner = document.getElementById('new-day-banner');
+            if (state.lastActiveDate && state.lastActiveDate !== todayStr) {
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function openEndDayModal() {
+            const dailies = state.quests.filter(q => q.type === 'daily');
+            const doneCount = dailies.filter(q => q.done).length;
+            const streakKept = doneCount >= 3 || state.streakShield;
+
+            let statusHtml = '';
+            if (doneCount >= 3) {
+                statusHtml = `
+                    <div class="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs">
+                        🔥 <strong>Отличный темп!</strong> Закрыто ${doneCount} из ${dailies.length} дейликов. Стрик вырастет до <strong>${state.streak + 1} дн.</strong> (+1 к Дисциплине).
+                    </div>`;
+            } else if (state.streakShield) {
+                statusHtml = `
+                    <div class="p-3 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs">
+                        🛡️ Закрыто всего ${doneCount}/3 дейликов, но <strong>Щит Стрика</strong> спасёт твой стрик (${state.streak} дн.) от обнуления!
+                    </div>`;
+            } else {
+                statusHtml = `
+                    <div class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs">
+                        ⚠️ Закрыто только ${doneCount} из 3 нужных дейликов. При завершении дня текущий стрик (${state.streak} дн.) сбросится в 0.
+                    </div>`;
+            }
+
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-white">Завершить текущий день?</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-400">Все галочки на ежедневных квестах сбросятся, чтобы ты мог начать новый день.</p>
+                ${statusHtml}
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="confirmEndDay()" class="btn-tactile py-2.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-extrabold">Новый день</button>
+                </div>
+            `);
+        }
+
+        function confirmEndDay() {
+            const dailies = state.quests.filter(q => q.type === 'daily');
+            const doneCount = dailies.filter(q => q.done).length;
+
+            if (doneCount >= 3) {
+                state.streak += 1;
+                state.stats.DISC = (state.stats.DISC || 0) + 1;
+                addLog(`День закрыт (${doneCount} дейликов). Стрик: ${state.streak} дн.`, 'quest');
+                showToast(`Новый день! Стрик: ${state.streak} 🔥`, 'emerald');
+            } else if (state.streakShield) {
+                state.streakShield = false;
+                addLog(`Щит Стрика спас серию (${state.streak} дн.)!`, 'use');
+                showToast(`Щит спас твой стрик (${state.streak} дн.)!`, 'cyan');
+            } else {
+                state.streak = 0;
+                addLog(`День завершен (${doneCount}/3). Стрик сброшен.`, 'info');
+                showToast(`Начат новый день. Стрик обнулён.`, 'info');
+            }
+
+            // Reset daily checkboxes
+            state.quests.forEach(q => {
+                if (q.type === 'daily') q.done = false;
+            });
+
+            state.lastActiveDate = new Date().toISOString().slice(0, 10);
+            playSound('complete');
+            saveState();
+            closeModal();
+            renderAll();
+        }
+
+        function resetWeekliesPrompt() {
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-white">Сбросить виклики?</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-400">Все галочки еженедельных квестов будут очищены для новой недели.</p>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="confirmResetWeeklies()" class="btn-tactile py-2.5 rounded-xl bg-purple-500 text-white text-xs font-extrabold">Сбросить</button>
+                </div>
+            `);
+        }
+
+        function confirmResetWeeklies() {
+            state.quests.forEach(q => {
+                if (q.type === 'weekly') q.done = false;
+            });
+            addLog('Еженедельные квесты обновлены на новую неделю.', 'info');
+            saveState();
+            closeModal();
+            renderAll();
+            showToast('Виклики готовы к новой неделе!', 'cyan');
+        }
+
+        // ==================== CUSTOM QUESTS & REWARDS ====================
+
+        function openAddQuestModal() {
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-white">Новый квест</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">КАТЕГОРИЯ</label>
+                        <select id="nq-type" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            <option value="daily" ${activeQuestSubTab === 'daily' ? 'selected' : ''}>Дейлик (Ежедневный)</option>
+                            <option value="weekly" ${activeQuestSubTab === 'weekly' ? 'selected' : ''}>Виклик (На неделю)</option>
+                            <option value="story" ${activeQuestSubTab === 'story' ? 'selected' : ''}>Сюжетка / Босс</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">НАЗВАНИЕ ЗАДАЧИ</label>
+                        <input id="nq-title" type="text" placeholder="Напр.: Разобрать 15 задание Инфы" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">ОПИСАНИЕ / УСЛОВИЕ</label>
+                        <input id="nq-desc" type="text" placeholder="Без подглядывания в решение" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[11px] font-mono text-slate-400">НАГРАДА (PTS)</label>
+                            <input id="nq-pts" type="number" value="25" min="5" max="1000" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-amber-300">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-mono text-slate-400">СТАТ ПРОКАЧКИ</label>
+                            <select id="nq-stat" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                <option value="INT">INT (Интеллект)</option>
+                                <option value="TECH">TECH (Техника)</option>
+                                <option value="VIT">VIT (Форма)</option>
+                                <option value="DISC">DISC (Дисциплина)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="saveCustomQuest()" class="btn-tactile py-2.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-extrabold">Добавить</button>
+                </div>
+            `);
+        }
+
+        function saveCustomQuest() {
+            const type = document.getElementById('nq-type').value;
+            const title = document.getElementById('nq-title').value.trim();
+            const desc = document.getElementById('nq-desc').value.trim() || 'Личная задача оператора';
+            const pts = Math.max(5, parseInt(document.getElementById('nq-pts').value, 10) || 20);
+            const stat = document.getElementById('nq-stat').value;
+
+            if (!title) {
+                showToast('Введи название квеста', 'crimson');
+                return;
+            }
+
+            state.quests.push({
+                id: 'cq_' + Date.now(),
+                type,
+                title,
+                desc,
+                pts,
+                stat,
+                done: false,
+                isCustom: true
+            });
+
+            activeQuestSubTab = type;
+            saveState();
+            closeModal();
+            switchQuestSubTab(type);
+            showToast('Квест добавлен в систему!', 'emerald');
+        }
+
+        function deleteCustomQuest(id) {
+            state.quests = state.quests.filter(q => q.id !== id);
+            saveState();
+            renderAll();
+            showToast('Квест удалён', 'info');
+        }
+
+        function openAddRewardModal() {
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-white">Своя награда в Магазин</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">КАТЕГОРИЯ</label>
+                        <select id="nr-cat" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            <option value="boost">⚡ Расходники и бусты</option>
+                            <option value="chill">🎮 Сессионный чилл</option>
+                            <option value="epic">💎 Эпический лут</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">НАЗВАНИЕ НАГРАДЫ</label>
+                        <input id="nr-title" type="text" placeholder="Напр.: Заказать шаурму / пиццу" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">ОПИСАНИЕ</label>
+                        <input id="nr-desc" type="text" placeholder="Награда за плотный гринд" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-mono text-slate-400">СТОИМОСТЬ (PTS)</label>
+                        <input id="nr-cost" type="number" value="150" min="10" max="10000" class="w-full mt-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-amber-300">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="saveCustomReward()" class="btn-tactile py-2.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-extrabold">В магазин</button>
+                </div>
+            `);
+        }
+
+        function saveCustomReward() {
+            const category = document.getElementById('nr-cat').value;
+            const title = document.getElementById('nr-title').value.trim();
+            const desc = document.getElementById('nr-desc').value.trim() || 'Личная награда';
+            const cost = Math.max(10, parseInt(document.getElementById('nr-cost').value, 10) || 100);
+
+            if (!title) {
+                showToast('Введи название награды', 'crimson');
+                return;
+            }
+
+            state.shop.push({
+                id: 'cr_' + Date.now(),
+                category,
+                title,
+                desc,
+                cost,
+                icon: 'fa-star',
+                isCustom: true
+            });
+
+            saveState();
+            closeModal();
+            renderAll();
+            showToast('Награда добавлена на витрину!', 'amber');
+        }
+
+        function deleteCustomReward(id) {
+            state.shop = state.shop.filter(r => r.id !== id);
+            saveState();
+            renderAll();
+            showToast('Награда удалена', 'info');
+        }
+
+        // ==================== SYSTEM SETTINGS & BACKUP ====================
+
+        function updateCanPrice(val) {
+            const num = parseInt(val, 10);
+            if (!isNaN(num) && num >= 30) {
+                state.canPriceRub = num;
+                saveState();
+                renderAll();
+                showToast(`Цена банки обновлена: ${num} ₽`, 'info');
+            }
+        }
+
+        function exportBackup() {
+            const jsonStr = JSON.stringify(state);
+            const tempInput = document.createElement('textarea');
+            tempInput.value = jsonStr;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('JSON-код бэкапа скопирован в буфер!', 'emerald');
+            } catch (err) {
+                showToast('Не удалось скопировать автоматически', 'crimson');
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        function openImportModal() {
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-white">Восстановление из бэкапа</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-400">Вставь скопированный ранее JSON-код сохранения:</p>
+                <textarea id="import-json-area" rows="4" placeholder='{"xp":...}' class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-[11px] text-emerald-300 focus:outline-none focus:border-emerald-500"></textarea>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="confirmImportBackup()" class="btn-tactile py-2.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-extrabold">Загрузить</button>
+                </div>
+            `);
+        }
+
+        function confirmImportBackup() {
+            const raw = document.getElementById('import-json-area').value.trim();
+            if (!raw) return;
+            try {
+                const parsed = JSON.parse(raw);
+                if (typeof parsed.xp !== 'number' || !Array.isArray(parsed.quests)) {
+                    throw new Error('Invalid schema');
+                }
+                state = { ...getDefaultState(), ...parsed };
+                saveState();
+                closeModal();
+                renderAll();
+                showToast('Бэкап успешно загружен!', 'emerald');
+            } catch (e) {
+                showToast('Ошибка: некорректный JSON-код', 'crimson');
+            }
+        }
+
+        function openHardResetModal() {
+            showModal(`
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-extrabold text-red-400">Полный сброс прогресса?</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-300">Это действие обнулит твой уровень, баланс PTS, стрик и вернёт стандартный список квестов. Отменить нельзя.</p>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button onclick="closeModal()" class="btn-tactile py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold">Отмена</button>
+                    <button onclick="confirmHardReset()" class="btn-tactile py-2.5 rounded-xl bg-red-500 text-white text-xs font-extrabold">Сбросить всё</button>
+                </div>
+            `);
+        }
+
+        function confirmHardReset() {
+            state = getDefaultState();
+            saveState();
+            closeModal();
+            renderAll();
+            showToast('Система сброшена до заводских настроек', 'info');
+        }
+
+        // ==================== NAVIGATION & UI HELPERS ====================
+
+        function switchMainTab(tab) {
+            activeMainTab = tab;
+            const tabs = ['quests', 'shop', 'stats', 'system'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const nav = document.getElementById(`nav-${t}`);
+                if (t === tab) {
+                    sec.classList.remove('hidden');
+                    nav.className = 'btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10 relative';
+                } else {
+                    sec.classList.add('hidden');
+                    nav.className = 'btn-tactile flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-slate-200 relative';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchQuestSubTab(sub) {
+            activeQuestSubTab = sub;
+            const subs = ['daily', 'weekly', 'story'];
+            subs.forEach(s => {
+                const btn = document.getElementById(`qtab-${s}`);
+                if (s === sub) {
+                    btn.className = 'btn-tactile py-1.5 px-2 rounded-lg text-xs font-bold transition-all bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                } else {
+                    btn.className = 'btn-tactile py-1.5 px-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all';
+                }
+            });
+            renderQuests();
+        }
+
+        function switchShopSubTab(sub) {
+            activeShopSubTab = sub;
+            const btnStore = document.getElementById('stab-store');
+            const btnInv = document.getElementById('stab-inventory');
+            const viewStore = document.getElementById('shop-store-view');
+            const viewInv = document.getElementById('shop-inventory-view');
+
+            if (sub === 'store') {
+                btnStore.className = 'btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                btnInv.className = 'btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white relative';
+                viewStore.classList.remove('hidden');
+                viewInv.classList.add('hidden');
+            } else {
+                btnInv.className = 'btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 relative';
+                btnStore.className = 'btn-tactile py-1.5 px-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+                viewInv.classList.remove('hidden');
+                viewStore.classList.add('hidden');
+            }
+        }
+
+        function filterShopCategory(cat) {
+            activeShopCategory = cat;
+            const cats = ['all', 'boost', 'chill', 'epic'];
+            cats.forEach(c => {
+                const btn = document.getElementById(`scat-${c}`);
+                if (c === cat) {
+                    btn.className = 'btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-slate-800 text-white border border-slate-600';
+                } else {
+                    btn.className = 'btn-tactile px-3 py-1 rounded-lg text-xs font-mono whitespace-nowrap bg-cyber-card text-slate-400 border border-cyber-border';
+                }
+            });
+            renderShop();
+        }
+
+        function showModal(html) {
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            content.innerHTML = html;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Initialize on load
+        window.onload = function () {
+            renderAll();
+        };
+    </script>
+</body>
+</html>
