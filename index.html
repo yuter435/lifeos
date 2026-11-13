@@ -8,14 +8,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="LIFE.OS" />
-  <title>LIFE.OS // PHANTOM EDITION</title>
+  <title>LIFE.OS // PHANTOM TERMINAL</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Oswald:wght@600;700&family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet" />
 
   <script>
-    // Генерация кастомной PNG-иконки Persona 5 и PWA-манифеста до загрузки UI
     (function generatePhantomIcon() {
       try {
         const size = 512;
@@ -24,11 +23,9 @@
         canvas.height = size;
         const ctx = canvas.getContext('2d');
 
-        // Чёрный фон с диагональными полосами
         ctx.fillStyle = '#070707';
         ctx.fillRect(0, 0, size, size);
 
-        // Красный диагональный слэш
         ctx.fillStyle = '#E60012';
         ctx.beginPath();
         ctx.moveTo(0, 90);
@@ -38,7 +35,6 @@
         ctx.closePath();
         ctx.fill();
 
-        // Белая звезда Фантомов (8-лучевая асимметричная)
         const cx = size / 2;
         const cy = size / 2;
         ctx.fillStyle = '#FFFFFF';
@@ -55,7 +51,6 @@
         ctx.closePath();
         ctx.fill();
 
-        // Чёрный внутренний ромб-маска
         ctx.fillStyle = '#070707';
         ctx.beginPath();
         ctx.moveTo(cx, cy - 115);
@@ -65,12 +60,10 @@
         ctx.closePath();
         ctx.fill();
 
-        // Красная обводка ромба
         ctx.strokeStyle = '#E60012';
         ctx.lineWidth = 10;
         ctx.stroke();
 
-        // Текст L.OS
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '900 84px sans-serif';
         ctx.textAlign = 'center';
@@ -91,7 +84,7 @@
         document.head.appendChild(appleIcon);
 
         const manifest = {
-          name: 'LIFE.OS // PHANTOM EDITION',
+          name: 'LIFE.OS // PHANTOM TERMINAL',
           short_name: 'LIFE.OS',
           start_url: './',
           display: 'standalone',
@@ -110,9 +103,7 @@
         linkManifest.rel = 'manifest';
         linkManifest.href = manifestUrl;
         document.head.appendChild(linkManifest);
-      } catch (e) {
-        console.warn('Icon init skipped', e);
-      }
+      } catch (e) {}
     })();
   </script>
 
@@ -120,7 +111,6 @@
     :root {
       --bg: #070707;
       --surface: #121212;
-      --surface-2: #1A1A1A;
       --red: #E60012;
       --red-dark: #9B000C;
       --yellow: #FFD60A;
@@ -148,7 +138,7 @@
       color: var(--white);
       font-family: var(--font-body);
       min-height: 100vh;
-      padding-bottom: 92px;
+      padding-bottom: 90px;
       overflow-x: hidden;
     }
 
@@ -158,14 +148,12 @@
       padding: 12px 14px 20px;
     }
 
-    /* TOP P5 HEADER */
     .p5-header {
       background: var(--red);
       border: 3px solid var(--white);
       box-shadow: 5px 5px 0 #000, 8px 8px 0 var(--red-dark);
       padding: 12px 14px;
       margin-bottom: 14px;
-      position: relative;
       clip-path: polygon(0 0, 100% 0, 100% 94%, 97% 100%, 0 100%);
     }
 
@@ -199,23 +187,23 @@
       color: var(--yellow);
       letter-spacing: 1.5px;
       display: block;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .header-metrics {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 6px;
+      gap: 5px;
     }
 
     .metric-pill {
       background: #070707;
       color: var(--white);
       border: 2px solid var(--white);
-      padding: 4px 9px;
+      padding: 4px 8px;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       transform: skewX(-6deg);
       cursor: pointer;
@@ -259,7 +247,6 @@
       transition: width 0.35s ease;
     }
 
-    /* CALLING CARD MOTIVATION */
     .calling-card {
       background: #0B0B0B;
       border: 2px solid var(--white);
@@ -267,7 +254,6 @@
       padding: 10px 12px;
       margin-bottom: 14px;
       box-shadow: 4px 4px 0 var(--red);
-      position: relative;
     }
 
     .cc-head {
@@ -297,11 +283,6 @@
       cursor: pointer;
     }
 
-    .cc-next:active {
-      background: var(--white);
-      color: #070707;
-    }
-
     .cc-text {
       font-size: 12.5px;
       line-height: 1.38;
@@ -309,7 +290,6 @@
       color: var(--white);
     }
 
-    /* SUB-TABS */
     .mode-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -327,7 +307,6 @@
       letter-spacing: 0.6px;
       cursor: pointer;
       transform: skewX(-6deg);
-      transition: 0.15s;
     }
 
     .mode-btn span {
@@ -342,7 +321,67 @@
       box-shadow: 3px 3px 0 var(--red);
     }
 
-    /* WIDGETS: STEPS & PHOTO */
+    .sched-box {
+      background: #101010;
+      border: 2px solid var(--red);
+      padding: 10px 11px;
+      margin-bottom: 12px;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .sched-nav {
+      display: grid;
+      grid-template-columns: 74px 1fr 74px;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .sched-nav-btn {
+      background: #070707;
+      color: var(--white);
+      border: 1.5px solid var(--white);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 4px;
+      cursor: pointer;
+    }
+
+    .sched-nav-btn:active {
+      background: var(--red);
+    }
+
+    .sched-current {
+      background: var(--yellow);
+      color: #070707;
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      padding: 5px 4px;
+      border: 2px solid #070707;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .sched-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
+    }
+
+    .sched-meta strong {
+      color: var(--white);
+    }
+
     .widget-box {
       background: var(--surface);
       border: 2px solid var(--white);
@@ -385,7 +424,6 @@
       background: #070707;
       border: 1px solid var(--muted);
       margin: 6px 0 8px;
-      position: relative;
       overflow: hidden;
     }
 
@@ -465,12 +503,11 @@
     }
 
     .btn-snap.done {
-      background: #233827;
+      background: #1C2E20;
       color: #8CF59E;
       border-color: #8CF59E !important;
     }
 
-    /* CATEGORY FILTER PILLS */
     .cat-scroll {
       display: flex;
       gap: 6px;
@@ -502,7 +539,6 @@
       border-color: var(--white);
     }
 
-    /* QUEST CARDS */
     .quest-list {
       display: flex;
       flex-direction: column;
@@ -518,18 +554,17 @@
       align-items: flex-start;
       gap: 10px;
       cursor: pointer;
-      transition: transform 0.1s, border-color 0.15s;
-      position: relative;
+      transition: transform 0.1s;
     }
 
     .quest-card:active {
       transform: scale(0.99);
     }
 
-    .quest-card.today-hot {
+    .quest-card.study-hot {
       border-color: var(--yellow);
       border-left: 5px solid var(--yellow);
-      background: #17150B;
+      background: #16140A;
     }
 
     .quest-card.completed {
@@ -549,7 +584,7 @@
       justify-content: center;
       font-family: var(--font-mono);
       font-weight: 800;
-      font-size: 14px;
+      font-size: 12px;
       margin-top: 2px;
       transform: skewX(-6deg);
     }
@@ -619,7 +654,6 @@
       padding-left: 4px;
     }
 
-    /* FOOTER ACTIONS IN QUESTS */
     .day-controls {
       margin-top: 16px;
       display: grid;
@@ -649,7 +683,6 @@
       border-color: var(--border);
     }
 
-    /* SHOP & INVENTORY */
     .shop-grid {
       display: flex;
       flex-direction: column;
@@ -709,7 +742,6 @@
       white-space: nowrap;
     }
 
-    /* STATS TAB */
     .stat-card {
       background: var(--surface);
       border: 2px solid var(--white);
@@ -792,7 +824,6 @@
       margin-right: 6px;
     }
 
-    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -813,13 +844,9 @@
       color: var(--muted);
       font-family: var(--font-head);
       font-size: 16px;
-      letter-spacing: 0.8px;
-      padding: 13px 4px;
+      letter-spacing: 1px;
+      padding: 14px 4px;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
     }
 
     .nav-item.active {
@@ -827,7 +854,6 @@
       color: var(--white);
     }
 
-    /* TOAST */
     .toast {
       position: fixed;
       top: 14px;
@@ -861,24 +887,23 @@
   <div id="toast" class="toast"></div>
 
   <div class="app-wrap">
-    <!-- HEADER -->
     <header class="p5-header">
       <div class="header-top">
         <div>
           <div class="date-box">
-            <div class="date-box-inner" id="headerDate">-- / -- • --</div>
+            <div class="date-box-inner" id="headerDate">-- / -- // --</div>
           </div>
           <span class="take-time">TAKE YOUR FUTURE // PHANTOM OS</span>
         </div>
         <div class="header-metrics">
           <div class="metric-pill pts"><span id="ptsDisplay">0 PTS</span></div>
-          <div class="metric-pill"><span id="streakDisplay">🔥 0 ДН.</span></div>
-          <div class="metric-pill" onclick="changeCanPrice()"><span id="canPricePill">⚡ 95₽ ✎</span></div>
+          <div class="metric-pill"><span id="streakDisplay">[STRK: 0]</span></div>
+          <div class="metric-pill" onclick="changeCanPrice()"><span id="canPricePill">[95 RUB]</span></div>
         </div>
       </div>
 
       <div class="rank-row">
-        <span id="rankTitle">LVL 1 • СКРИПТ-КИДДИ</span>
+        <span id="rankTitle">LVL 1 // СКРИПТ-КИДДИ</span>
         <span id="xpText">0 / 250 XP</span>
       </div>
       <div class="xp-track">
@@ -886,29 +911,37 @@
       </div>
     </header>
 
-    <!-- CALLING CARD MOTIVATION -->
     <section class="calling-card">
       <div class="cc-head">
         <span class="cc-tag">CALLING CARD // ДИРЕКТИВА</span>
-        <button class="cc-next" onclick="nextQuote()">ЕЩЁ ↻</button>
+        <button class="cc-next" onclick="nextQuote()">[СЛЕД]</button>
       </div>
       <div class="cc-text" id="quoteText"></div>
     </section>
 
-    <!-- ==================== TAB 1: QUESTS ==================== -->
     <main id="tab-quests">
       <div class="mode-tabs">
         <button class="mode-btn active" data-mode="daily" onclick="setQuestMode('daily', this)"><span>ДЕЙЛИКИ</span></button>
         <button class="mode-btn" data-mode="weekly" onclick="setQuestMode('weekly', this)"><span>ВИКЛИКИ</span></button>
-        <button class="mode-btn" data-mode="boss" onclick="setQuestMode('boss', this)"><span>БОССЫ ЕГЭ</span></button>
+        <button class="mode-btn" data-mode="boss" onclick="setQuestMode('boss', this)"><span>ЭТАПЫ ЕГЭ</span></button>
       </div>
 
-      <!-- WIDGETS (VISIBLE IN DAILY MODE) -->
       <div id="daily-widgets">
-        <!-- STEPS WIDGET -->
+        <div class="sched-box">
+          <div class="sched-nav">
+            <button class="sched-nav-btn" onclick="shiftSelectedDate(-1)">&lt; ПРЕД</button>
+            <div class="sched-current" id="schedDateLabel" onclick="resetSelectedDateToToday()">14.11 СБ // СЕГОДНЯ</div>
+            <button class="sched-nav-btn" onclick="shiftSelectedDate(1)">СЛЕД &gt;</button>
+          </div>
+          <div class="sched-meta">
+            <span id="schedPhaseLabel">ЭТАП 1 // БАЗА + ИТОГОВОЕ</span>
+            <strong id="schedFocusLabel">ПРОФИЛЬ + ИНФА</strong>
+          </div>
+        </div>
+
         <div class="widget-box">
           <div class="widget-title-row">
-            <span class="widget-title">👟 Маршрут Фантома // Шаги</span>
+            <span class="widget-title">[ШАГИ] МАРШРУТ ДНЯ</span>
             <span class="widget-badge" id="stepsCountBadge">0 / 10 000</span>
           </div>
           <div class="step-bar-bg">
@@ -918,46 +951,41 @@
             <button class="mini-btn" onclick="addSteps(1000)">+1 000</button>
             <button class="mini-btn" onclick="addSteps(2500)">+2 500</button>
             <button class="mini-btn accent" onclick="addSteps(4000)">+4К РЕПЕТ</button>
-            <button class="mini-btn" onclick="setCustomSteps()">ВВОД ✎</button>
+            <button class="mini-btn" onclick="setCustomSteps()">[ВВОД]</button>
           </div>
         </div>
 
-        <!-- PHOTO WIDGET -->
         <div class="widget-box photo-widget">
           <div class="widget-title-row">
-            <span class="widget-title">📸 Кадр дня // Вайб-охота</span>
+            <span class="widget-title">[КАДР ДНЯ] ВАЙБ-ОХОТА</span>
             <span class="widget-badge" id="photoCatBadge">ЛИМИНАЛ</span>
           </div>
           <div class="photo-prompt" id="photoPromptText">Загрузка задания...</div>
           <div class="photo-tip" id="photoTipText"></div>
           <div class="photo-btns">
-            <button class="btn-reroll" onclick="rerollPhoto()">🎲 СМЕНИТЬ</button>
-            <button class="btn-snap" id="btnSnapPhoto" onclick="completePhotoDaily()">📸 СНЯЛ (+25 PTS)</button>
+            <button class="btn-reroll" onclick="rerollPhoto()">[СМЕНИТЬ]</button>
+            <button class="btn-snap" id="btnSnapPhoto" onclick="completePhotoDaily()">[СНЯЛ +25 PTS]</button>
           </div>
         </div>
 
-        <!-- CATEGORY FILTERS -->
         <div class="cat-scroll" id="catFilters">
           <button class="cat-chip active" data-cat="all" onclick="setCatFilter('all', this)">ВСЕ</button>
-          <button class="cat-chip" data-cat="study" onclick="setCatFilter('study', this)">🎓 УЧЁБА</button>
-          <button class="cat-chip" data-cat="sport" onclick="setCatFilter('sport', this)">💪 СПОРТ</button>
-          <button class="cat-chip" data-cat="code" onclick="setCatFilter('code', this)">💻 КОД / DAVINCI</button>
-          <button class="cat-chip" data-cat="home" onclick="setCatFilter('home', this)">🧹 БЫТ</button>
-          <button class="cat-chip" data-cat="vibe" onclick="setCatFilter('vibe', this)">📸 ВАЙБ / УХОД</button>
+          <button class="cat-chip" data-cat="study" onclick="setCatFilter('study', this)">[УЧЁБА ПО ДНЮ]</button>
+          <button class="cat-chip" data-cat="sport" onclick="setCatFilter('sport', this)">[СПОРТ]</button>
+          <button class="cat-chip" data-cat="code" onclick="setCatFilter('code', this)">[КОД / DAVINCI]</button>
+          <button class="cat-chip" data-cat="home" onclick="setCatFilter('home', this)">[БЫТ]</button>
+          <button class="cat-chip" data-cat="vibe" onclick="setCatFilter('vibe', this)">[ВАЙБ / УХОД]</button>
         </div>
       </div>
 
-      <!-- QUEST LIST -->
       <div class="quest-list" id="questList"></div>
 
-      <!-- END OF DAY CONTROLS -->
       <div class="day-controls" id="dayControls">
-        <button class="action-btn btn-finish-day" onclick="finishDay()">🌙 ЗАВЕРШИТЬ ДЕНЬ</button>
-        <button class="action-btn btn-relapse" onclick="logEnergyRelapse()">⚡ СРЫВ (-40 PTS)</button>
+        <button class="action-btn btn-finish-day" onclick="finishDay()">[ЗАВЕРШИТЬ ДЕНЬ]</button>
+        <button class="action-btn btn-relapse" onclick="logEnergyRelapse()">[СРЫВ -40 PTS]</button>
       </div>
     </main>
 
-    <!-- ==================== TAB 2: SHOP ==================== -->
     <main id="tab-shop" class="hidden">
       <div class="mode-tabs" style="grid-template-columns: 1fr 1fr;">
         <button class="mode-btn active" id="shopSubStore" onclick="setShopSub('store')"><span>ВИТРИНА</span></button>
@@ -968,10 +996,9 @@
       <div id="invList" class="shop-grid hidden"></div>
     </main>
 
-    <!-- ==================== TAB 3: STATS ==================== -->
     <main id="tab-stats" class="hidden">
       <div class="stat-card">
-        <div class="widget-title" style="margin-bottom: 10px;">📊 ХАРАКТЕРИСТИКИ ФАНТОМА</div>
+        <div class="widget-title" style="margin-bottom: 10px;">[ХАРАКТЕРИСТИКИ] ПРОФИЛЬ ФАНТОМА</div>
 
         <div class="stat-row">
           <div class="stat-top"><span>INT // ИНТЕЛЛЕКТ (ЕГЭ И ТЕОРИЯ)</span><span id="stat-INT">LVL 1 (0 XP)</span></div>
@@ -996,8 +1023,8 @@
 
       <div class="stat-card">
         <div class="widget-title-row">
-          <span class="widget-title">⚡ КОНТРОЛЬ ЭНЕРГОСОВ</span>
-          <button class="mini-btn" onclick="changeCanPrice()">ЦЕНА: <span id="statCanPrice">95</span>₽ ✎</button>
+          <span class="widget-title">[КОНТРОЛЬ] ЭНЕРГЕТИКИ</span>
+          <button class="mini-btn" onclick="changeCanPrice()">ЦЕНА: <span id="statCanPrice">95</span> RUB</button>
         </div>
         <div class="energy-grid">
           <div class="e-box">
@@ -1005,7 +1032,7 @@
             <div class="e-lbl">ЧИСТЫХ ДНЕЙ</div>
           </div>
           <div class="e-box">
-            <div class="e-val" id="eSavedMoney">0 ₽</div>
+            <div class="e-val" id="eSavedMoney">0 RUB</div>
             <div class="e-lbl">СЭКОНОМЛЕНО</div>
           </div>
           <div class="e-box">
@@ -1016,46 +1043,38 @@
       </div>
 
       <div class="stat-card">
-        <div class="widget-title" style="margin-bottom: 6px;">🎞️ АРХИВ СНЯТЫХ КАДРОВ</div>
+        <div class="widget-title" style="margin-bottom: 6px;">[АРХИВ] СНЯТЫЕ КАДРЫ</div>
         <div id="photoArchiveList">
-          <div style="font-size: 12px; color: var(--muted);">Пока пусто. Закрой «Кадр дня» на главной вкладке.</div>
+          <div style="font-size: 12px; color: var(--muted);">Пока пусто. Закрой Кадр дня на главной вкладке.</div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="widget-title">💾 РЕЗЕРВНАЯ КОПИЯ СЕЙВА</div>
-        <p style="font-size: 12px; color: var(--muted); margin-top: 4px;">
-          Прогресс сохраняется автоматически на телефоне. Используй экспорт для бэкапа в заметки.
+        <div class="widget-title">[БАЗА И СЕЙВ] УПРАВЛЕНИЕ ДАННЫМИ</div>
+        <p style="font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.35;">
+          Прогресс сохраняется на телефоне. Внешний файл plan.json из корня репозитория подхватывается автоматически.
         </p>
         <div class="backup-btns">
-          <button class="mini-btn" style="padding: 9px;" onclick="exportSave()">📋 ЭКСПОРТ СЕЙВА</button>
-          <button class="mini-btn" style="padding: 9px;" onclick="importSave()">📥 ИМПОРТ СЕЙВА</button>
+          <button class="mini-btn" style="padding: 9px;" onclick="exportSave()">[ЭКСПОРТ СЕЙВА]</button>
+          <button class="mini-btn" style="padding: 9px;" onclick="importSave()">[ИМПОРТ СЕЙВА]</button>
         </div>
-        <button class="mini-btn" style="width: 100%; margin-top: 8px; border-color: #444; color: #888; padding: 8px;" onclick="resetAll()">⚠️ ПОЛНЫЙ СБРОС ПРОГРЕССА</button>
+        <button class="mini-btn accent" style="width: 100%; margin-top: 8px; padding: 9px;" onclick="downloadPlanJson()">[СКАЧАТЬ БАЗУ PLAN.JSON (209 ДНЕЙ)]</button>
+        <button class="mini-btn" style="width: 100%; margin-top: 8px; border-color: #444; color: #888; padding: 8px;" onclick="resetAll()">[ПОЛНЫЙ СБРОС ПРОГРЕССА]</button>
       </div>
     </main>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
-    <button class="nav-item active" data-tab="quests" onclick="switchTab('quests', this)">
-      <span>🎯 КВЕСТЫ</span>
-    </button>
-    <button class="nav-item" data-tab="shop" onclick="switchTab('shop', this)">
-      <span>🛒 МАГАЗИН</span>
-    </button>
-    <button class="nav-item" data-tab="stats" onclick="switchTab('stats', this)">
-      <span>⚡ СТАТЫ</span>
-    </button>
+    <button class="nav-item active" data-tab="quests" onclick="switchTab('quests', this)">КВЕСТЫ</button>
+    <button class="nav-item" data-tab="shop" onclick="switchTab('shop', this)">МАГАЗИН</button>
+    <button class="nav-item" data-tab="stats" onclick="switchTab('stats', this)">СТАТЫ</button>
   </nav>
 
   <script>
-    // ==================== DATA DEFINITIONS ====================
-
     const MOTIVATIONS = [
       "БУДУЩЕЕ НЕ ЖДУТ — ЕГО ВЗЛАМЫВАЮТ. ЗАКРОЙ БАЗУ СЕГОДНЯ, ЧТОБЫ ЗАВТРА ЗАБРАТЬ СВОЁ МЕСТО.",
-      "ОДИН ЧАС ФОКУСА НА ВТОРОЙ ЧАСТИ ПРОФИЛЯ СТОИТ ДОРОЖЕ ДЕСЯТИ СЛИТЫХ ВЕЧЕРОВ.",
-      "НЕ СЛИВАЙ БАБКИ И ПУЛЬС НА АВТОМАТЕ. БАНКА ЭНЕРГОСА — ЭТО ТРОФЕЙ, А НЕ КОСТЫЛЬ.",
+      "АВТОПИЛОТ НА ПЕРВОЙ ЧАСТИ — ЭТО СВОБОДНЫЕ ДВА С ПОЛОВИНОЙ ЧАСА НА ВТОРУЮ ЧАСТЬ ЭКЗАМЕНА.",
+      "НЕ СЛИВАЙ ДЕНЬГИ И ПУЛЬС НА АВТОМАТЕ. БАНКА ЭНЕРГОСА — ЭТО ТРОФЕЙ, А НЕ КОСТЫЛЬ.",
       "ДИСЦИПЛИНА — ЭТО КОГДА ТЫ ДЕЛАЕШЬ НУЖНОЕ ДО ТОГО, КАК ПОЯВИТСЯ НАСТРОЕНИЕ.",
       "ПОСТУПЛЕНИЕ НА ИНФОБЕЗ НАЧИНАЕТСЯ НЕ В ИЮЛЕ, А В СЕГОДНЯШНЕЙ ЗАДАЧЕ ПО PYTHON.",
       "ПОРЯДОК НА СТОЛЕ = ПОРЯДОК В ГОЛОВЕ. УБЕРИ ХЛАМ И ВРУБАЙ РЕЖИМ DEEP WORK.",
@@ -1084,90 +1103,93 @@
       { cat: "АТМОСФЕРА", title: "Капли дождя или конденсат на ночном стекле", tip: "Фокус на каплях на переднем плане, огни на фоне в мягком боке." }
     ];
 
-    // days: 0=Вс, 1=Пн, 2=Вт, 3=Ср, 4=Чт, 5=Пт, 6=Сб
-    const DAILY_QUESTS = [
-      // УЧЁБА (ЕГЭ)
-      { id: "d_school", cat: "study", stat: "INT", pts: 15, days: [1,2,3,4,5], title: "Смена в школе без залипания", desc: "Отработать уроки и вернуться домой с живой головой к 13:30 (в ЧТ — с 12:40)." },
-      { id: "d_math_part1", cat: "study", stat: "INT", pts: 25, days: [1,2,3,4,5,6], title: "Профиль ЕГЭ: 1-я часть (№1–12)", desc: "Прогнать базовый вариант на скорость и точность без глупых арифметических ошибок." },
-      { id: "d_math_gent", cat: "study", stat: "INT", pts: 35, days: [1,3,5,6], title: "Профиль ЕГЭ: №13, №15 или №16", desc: "Решить минимум 3 задачи из «джентльменского набора» второй части (уравнения, неравенства, экономика)." },
-      { id: "d_math_hard", cat: "study", stat: "INT", pts: 40, days: [4,6,0], title: "Профиль ЕГЭ: штурм №14, №17 или №18", desc: "Разобрать сложную геометрию, параметр или теорию чисел с полным оформлением." },
-      { id: "d_inf_py", cat: "study", stat: "INT", pts: 35, days: [1,2,4,5,6], title: "Информатика ЕГЭ: код на Python (№17, 24–27)", desc: "Написать и отладить решения задач на строки, перебор, файлы или динамику." },
-      { id: "d_inf_logic", cat: "study", stat: "INT", pts: 25, days: [2,3,5,0], title: "Информатика ЕГЭ: логика и теория игр (№2, 15, 19–21)", desc: "Решить блок аналитических и игровых задач в режиме Deep Work." },
-      { id: "d_rus_test", cat: "study", stat: "INT", pts: 20, days: [1,2,3,5], title: "Русский ЕГЭ: орфография и пунктуация (№8–21)", desc: "Прорешать тестовый блок и выписать слова-ловушки, где ошибся." },
-      { id: "d_rus_essay", cat: "study", stat: "INT", pts: 35, days: [3,6,0], title: "Русский ЕГЭ: практика сочинения (№27)", desc: "Разобрать текст: проблема, комментарий, позиция автора и своя аргументация." },
-      { id: "d_tutor_math", cat: "study", stat: "INT", pts: 35, days: [2,4], title: "Репетитор: Профильная математика", desc: "ВТ (17:00) / ЧТ (16:00) — плотно отработать занятие и разобрать домашку." },
-      { id: "d_tutor_rus", cat: "study", stat: "INT", pts: 30, days: [3], title: "Репетитор: Русский язык (17:00)", desc: "Среда — закрыть занятие по русскому и зафиксировать правки по сочинению." },
-      { id: "d_thu_early", cat: "study", stat: "INT", pts: 30, days: [4], title: "Четверг: ранний старт с 12:40", desc: "Использовать короткий день в школе для дополнительного 2-часового блока бота." },
-
-      // СПОРТ И ШАГИ
+    const GENERAL_DAILIES = [
       { id: "d_steps_6k", cat: "sport", stat: "VIT", pts: 20, title: "Пройти 6 000 шагов за день", desc: "Базовая дневная активность (засчитывается автоматически в трекере шагов)." },
-      { id: "d_steps_10k", cat: "sport", stat: "VIT", pts: 35, title: "Пройти 10 000 шагов (маршрут Фантома)", desc: "Полная дневная норма движения (засчитывается автоматически при достижении 10к)." },
+      { id: "d_steps_10k", cat: "sport", stat: "VIT", pts: 35, title: "Пройти 10 000 шагов (маршрут дня)", desc: "Полная дневная норма движения (засчитывается автоматически при достижении 10к)." },
       { id: "d_workout", cat: "sport", stat: "VIT", pts: 30, title: "Домашняя тренировка / турник", desc: "Силовая база дома без отмазок (подтягивания, отжимания, пресс/кор)." },
       { id: "d_protein", cat: "sport", stat: "VIT", pts: 20, title: "Нормальный рацион и белок", desc: "Нормальные приёмы пищи (мясо/курица, крупы, творог) вместо сухомятки." },
       { id: "d_cold_shower", cat: "sport", stat: "VIT", pts: 15, title: "Холодный / контрастный душ", desc: "Перезагрузить нервную систему и взбодриться без стимуляторов." },
 
-      // КОД И МОНТАЖ
       { id: "d_py_script", cat: "code", stat: "TECH", pts: 30, title: "Практика на Python: скрипты и автоматизация", desc: "Пописать рабочий код на Python, потренировать алгоритмы или парсинг." },
       { id: "d_infosec", cat: "code", stat: "TECH", pts: 30, title: "Инфобез и AppSec: разбор уязвимостей", desc: "Изучить вектор атаки, логику защиты веб-приложений или решить таск по безопасности." },
       { id: "d_davinci", cat: "code", stat: "TECH", pts: 30, title: "Монтаж в DaVinci Resolve", desc: "Нарезка, цветокор, работа со звуком или сборка ролика (минимум 45–60 минут)." },
 
-      // БЫТ И РЕЖИМ
       { id: "d_no_energy", cat: "home", stat: "DISC", pts: 25, title: "Чистый день без энергетика", desc: "Ни одной банки за день: экономия бюджета и ровный пульс." },
       { id: "d_desk_clean", cat: "home", stat: "DISC", pts: 15, title: "Зачистка рабочего стола", desc: "Убрать кружки, фантики, провода и лишний хлам со стола перед сном." },
-      { id: "d_clothes_chair", cat: "home", stat: "DISC", pts: 15, title: "Разобрать вещи и «стул со шмотками»", desc: "Развесить и сложить одежду по местам, чтобы комната не превращалась в свалку." },
+      { id: "d_clothes_chair", cat: "home", stat: "DISC", pts: 15, title: "Разобрать вещи и одежду в комнате", desc: "Развесить и сложить одежду по местам, чтобы комната не превращалась в свалку." },
       { id: "d_dishes", cat: "home", stat: "DISC", pts: 15, title: "Чистая посуда сразу после еды", desc: "Не копить тарелки и кружки в комнате или раковине." },
       { id: "d_sleep", cat: "home", stat: "DISC", pts: 20, title: "Отбой вовремя без думскроллинга", desc: "Убрать телефон за 30 минут до сна, чтобы выспаться перед школой." },
 
-      // ВАЙБ И УХОД
       { id: "d_photo_day", cat: "vibe", stat: "DISC", pts: 25, title: "Кадр дня // Вайб-охота", desc: "Сделать один атмосферный снимок по заданию дня (отмечается в виджете выше)." },
       { id: "d_skincare", cat: "vibe", stat: "VIT", pts: 15, title: "Базовый уход за собой", desc: "Умывание, увлажнение и порядок с внешним видом утром и вечером." },
       { id: "d_edc_prep", cat: "vibe", stat: "DISC", pts: 15, title: "Собрать рюкзак и вещи с вечера", desc: "Подготовить тетради, зарядку и одежду на завтра, чтобы утром не суетиться." }
     ];
 
     const WEEKLY_QUESTS = [
-      { id: "w_mock_exam", stat: "INT", pts: 120, title: "Полный пробник ЕГЭ по таймеру", desc: "Написать целый вариант (Профиль или Инфа) с бланками и разбором каждой ошибки." },
-      { id: "w_room_reset", stat: "DISC", pts: 80, title: "Генеральная зачистка комнаты", desc: "Пропылесосить, протереть пыль, разобрать полки и навести полный порядок." },
+      { id: "w_mock_exam", stat: "INT", pts: 120, title: "Полный пробник ЕГЭ по таймеру", desc: "Написать целый вариант (Профиль, Инфа или Русский) с разбором каждой ошибки." },
+      { id: "w_error_bank", stat: "INT", pts: 90, title: "Зачистка Банка ошибок за неделю", desc: "Выписать все заваленные номера недели и решить по 2 аналогичных прототипа." },
+      { id: "w_room_reset", stat: "DISC", pts: 80, title: "Генеральная уборка комнаты", desc: "Пропылесосить, протереть пыль, разобрать полки и навести полный порядок." },
       { id: "w_davinci_release", stat: "TECH", pts: 110, title: "Готовый смонтированный кусок / проект в DaVinci", desc: "Довести начатый монтаж до финального рендера без вечного откладывания." },
       { id: "w_clean_week", stat: "DISC", pts: 130, title: "Неделя без нелицензионных энергосов", desc: "7 дней подряд держать контроль над покупками энергетиков." },
       { id: "w_steps_50k", stat: "VIT", pts: 100, title: "50 000 шагов за неделю", desc: "Держать стабильный пеший темп всю неделю." }
     ];
 
     const BOSS_QUESTS = [
-      { id: "b_math_80", stat: "INT", pts: 400, title: "БОСС: Профильная математика 80+ на пробнике", desc: "Уверенно забирать всю первую часть + №13, №15, №16 и цеплять баллы на №14/17/18." },
-      { id: "b_inf_85", stat: "INT", pts: 400, title: "БОСС: Информатика ЕГЭ 85+ на пробнике", desc: "Решать задачи на Python (№24–27) чисто и укладываться в тайминг экзамена." },
-      { id: "b_rus_80", stat: "INT", pts: 350, title: "БОСС: Русский язык 80+ на пробнике", desc: "Минимум ошибок в тесте и сильное сочинение №27 по всем критериям." },
-      { id: "b_appsec_proj", stat: "TECH", pts: 450, title: "БОСС: Собственный проект / инструмент для портфолио", desc: "Довести свой софт, веб-приложение или скрипт по инфобезу до рабочего релиза." },
-      { id: "b_30_clean", stat: "DISC", pts: 500, title: "БОСС: 30 чистых дней без слива денег на энергосы", desc: "Полный контроль над привычкой и почти 3 000 ₽ сэкономленного бюджета." }
+      { id: "b_stage1", stat: "INT", pts: 350, title: "ЭТАП 1 (Декабрь 2026): Итоговое сочинение + База и №13", desc: "Зачёт по сочинению, профиль №1–12 за 30 мин + №13, инфа вся 1-я часть + Python №17/24." },
+      { id: "b_stage2", stat: "INT", pts: 400, title: "ЭТАП 2 (Февраль 2027): Джентльменский набор (76–82 балла)", desc: "Закрыты профиль №15 (неравенства), №16 (экономика), №19(а,б) и инфа №19–21, №25, №26." },
+      { id: "b_stage3", stat: "INT", pts: 450, title: "ЭТАП 3 (Апрель 2027): Выход на 85–90+ (Параметры и Хард)", desc: "Освоены №18 (параметры), геометрия (№14/17), инфа №26–27 и еженедельное сочинение №27." },
+      { id: "b_appsec_proj", stat: "TECH", pts: 450, title: "ПРОЕКТ: Собственный софт / скрипт по инфобезу в портфолио", desc: "Довести свой веб-инструмент или Python-проект до рабочего релиза." },
+      { id: "b_30_clean", stat: "DISC", pts: 500, title: "ВОЛЯ: 30 чистых дней без слива денег на энергосы", desc: "Полный контроль над привычкой и почти 3 000 RUB сэкономленного бюджета." }
     ];
 
     const STORE_ITEMS = [
-      { id: "s_can_basic", getTitle: (p) => `⚡ Лицензия на банку (${p}₽)`, desc: "Право купить 1 банку энергетика чисто в кайф после закрытия базы дня.", cost: 90 },
-      { id: "s_overclock", getTitle: (p) => `🔥 Оверклок-пак (банка ${p}₽ под ночной завоз)`, desc: "Легальный буст под длинную сессию кода, монтажа или сложного варианта ЕГЭ.", cost: 140 },
-      { id: "s_chill_40", getTitle: () => "🛋️ Право на тупняк (40 минут)", desc: "40 минут лежать в потолок в наушниках с абсолютным нулём задач.", cost: 80 },
-      { id: "s_game_session", getTitle: () => "🎮 1.5 часа катки без зазрения совести", desc: "Выкупленное игровое время — никакой вины за непрорешанные варианты.", cost: 110 },
-      { id: "s_binge_night", getTitle: () => "🎬 Запойный вечер кино / аниме / манги", desc: "Целый свободный вечер под тайтлы или чтение без таймеров.", cost: 280 },
-      { id: "s_streetfood", getTitle: () => "🍔 Посиделки / стритфуд с кентами", desc: "Вылазка погулять и нормально поесть вне дома.", cost: 350 },
-      { id: "s_cd_disc", getTitle: () => "💿 Новый CD / релиз в коллекцию", desc: "Право заказать физический диск любимого альбома на полку.", cost: 1100 },
-      { id: "s_setup_gear", getTitle: () => "🛠️ Апгрейд / полезная штука для сетапа", desc: "Покупка нужного аксессуара или детали без чувства лишних трат.", cost: 1200 },
-      { id: "s_wardrobe", getTitle: () => "🧥 Дроп в гардероб", desc: "Покупка вещи из вишлиста как награда за длинную дистанцию.", cost: 1400 },
-      { id: "s_cheat_day", getTitle: () => "👑 Легальный полный «Чит-дей»", desc: "Целый день абсолютного отдыха: стрик замораживается и не сгорает.", cost: 1500 }
+      { id: "s_can_basic", getTitle: (p) => `[БУСТ] Лицензия на банку (${p} RUB)`, desc: "Право купить 1 банку энергетика чисто в кайф после закрытия базы дня.", cost: 90 },
+      { id: "s_overclock", getTitle: (p) => `[БУСТ] Оверклок-пак (банка ${p} RUB под завоз)`, desc: "Легальный буст под длинную сессию кода, монтажа или сложного варианта ЕГЭ.", cost: 140 },
+      { id: "s_chill_40", getTitle: () => "[ЧИЛЛ] Право на тупняк (40 минут)", desc: "40 минут лежать в потолок в наушниках с абсолютным нулём задач.", cost: 80 },
+      { id: "s_game_session", getTitle: () => "[ИГРА] 1.5 часа катки без зазрения совести", desc: "Выкупленное игровое время — никакой вины за непрорешанные варианты.", cost: 110 },
+      { id: "s_binge_night", getTitle: () => "[ВЕЧЕР] Запойный вечер кино / аниме / манги", desc: "Целый свободный вечер под тайтлы или чтение без таймеров.", cost: 280 },
+      { id: "s_streetfood", getTitle: () => "[ВЫЛАЗКА] Посиделки / стритфуд с кентами", desc: "Вылазка погулять и нормально поесть вне дома.", cost: 350 },
+      { id: "s_cd_disc", getTitle: () => "[ЛУТ] Новый CD / релиз в коллекцию", desc: "Право заказать физический диск любимого альбома на полку.", cost: 1100 },
+      { id: "s_setup_gear", getTitle: () => "[ЛУТ] Апгрейд / полезная штука для сетапа", desc: "Покупка нужного аксессуара или детали без чувства лишних трат.", cost: 1200 },
+      { id: "s_wardrobe", getTitle: () => "[ЛУТ] Дроп в гардероб", desc: "Покупка вещи из вишлиста как награда за длинную дистанцию.", cost: 1400 },
+      { id: "s_cheat_day", getTitle: () => "[VIP] Легальный полный Чит-дей", desc: "Целый день абсолютного отдыха: стрик замораживается и не сгорает.", cost: 1500 }
     ];
 
     const RANKS = [
-      { minXp: 0, title: "LVL 1 • СКРИПТ-КИДДИ" },
-      { minXp: 250, title: "LVL 2 • НОЧНОЙ ОПЕРАТОР" },
-      { minXp: 600, title: "LVL 3 • ВЗЛОМЩИК РУТИНЫ" },
-      { minXp: 1100, title: "LVL 4 • АРХИТЕКТОР СИСТЕМЫ" },
-      { minXp: 1800, title: "LVL 5 • ФАНТОМ ДЕДЛАЙНОВ" },
-      { minXp: 2700, title: "LVL 6 • МАСТЕР ROOT-ДОСТУПА" },
-      { minXp: 4000, title: "LVL 7 • ПОВЕЛИТЕЛЬ ВРЕМЕНИ" }
+      { minXp: 0, title: "LVL 1 // СКРИПТ-КИДДИ" },
+      { minXp: 250, title: "LVL 2 // НОЧНОЙ ОПЕРАТОР" },
+      { minXp: 600, title: "LVL 3 // ВЗЛОМЩИК РУТИНЫ" },
+      { minXp: 1100, title: "LVL 4 // АРХИТЕКТОР СИСТЕМЫ" },
+      { minXp: 1800, title: "LVL 5 // ФАНТОМ ДЕДЛАЙНОВ" },
+      { minXp: 2700, title: "LVL 6 // МАСТЕР ROOT-ДОСТУПА" },
+      { minXp: 4000, title: "LVL 7 // ПОВЕЛИТЕЛЬ ВРЕМЕНИ" }
     ];
 
-    // ==================== STATE MANAGEMENT ====================
+    const EMBEDDED_PLAN_DB = {"2026-11-14":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (1-я часть): №1 планиметрия и №2 векторы — разбор всех прототипов","pts":40},{"title":"Инфа (база): №1 анализ информационных моделей (графы) и №4 кодирование (Фано)","pts":30}]},"2026-11-15":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-11-16":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №17 обработка последовательностей и пар соседних элементов","pts":35},{"title":"Профиль (1-я часть): №3 стереометрия (объёмы и площади поверхностей)","pts":25}]},"2026-11-17":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-11-18":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (Итоговое): разбор направлений и банка универсальных аргументов","pts":30}]},"2026-11-19":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (1-я часть): №4 классическая и №5 сложная теория вероятностей","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-11-20":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (база): №7 кодирование графики и звука, №11 вычисление объёма памяти","pts":35},{"title":"Русский (орфография): №9 правописание корней (чередующиеся, проверяемые)","pts":25}]},"2026-11-21":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №13 тригонометрические уравнения и формулы приведения","pts":40},{"title":"Инфа (Python): №17 тройки элементов и проверка делимости в файле","pts":30}]},"2026-11-22":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-11-23":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (база): №8 комбинаторика (перебор слов и чисел через itertools)","pts":35},{"title":"Профиль (1-я часть): №6 простейшие уравнения и №7 преобразования выражений","pts":25}]},"2026-11-24":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-11-25":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (Итоговое): тренировка вступления и тезиса по 3 темам","pts":30}]},"2026-11-26":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №13 отбор корней на тригонометрической окружности","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-11-27":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №24 базовый перебор строк и поиск максимальной подстроки","pts":35},{"title":"Русский (орфография): №10 правописание приставок (ПРЕ/ПРИ, Ы/И после приставок)","pts":25}]},"2026-11-28":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (1-я часть): №8 геометрический и физический смысл производной","pts":40},{"title":"Инфа (база): №2 таблицы истинности (код на Python) и №6 Черепаха","pts":30}]},"2026-11-29":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-11-30":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №24 подсчёт цепочек символов с ограничениями","pts":35},{"title":"Профиль (2-я часть): №13 показательные и логарифмические уравнения (ОДЗ)","pts":25}]},"2026-12-01":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-12-02":{"p":"ЭТАП 1 // БАЗА + ИТОГОВОЕ","f":"ИТОГОВОЕ СОЧИНЕНИЕ (ДОПУСК)","t":[{"title":"Написать Итоговое сочинение (минимум 350 слов, 2 аргумента)","pts":50},{"title":"Разбор написанной работы с репетитором по русскому (17:00)","pts":35}]},"2026-12-03":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №15 дробно-рациональные неравенства (метод интервалов)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-12-04":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (логика): №15 числовые отрезки, делители и поразрядная конъюнкция","pts":35},{"title":"Русский (пунктуация): №16 запятые в ССП и при однородных членах","pts":25}]},"2026-12-05":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №15 показательные неравенства с заменой переменной","pts":40},{"title":"Инфа (Python): №24 метод двух указателей для поиска подстрок","pts":30}]},"2026-12-06":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-12-07":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №24 разбор строк с регулярными выражениями и заменами","pts":35},{"title":"Профиль (2-я часть): №15 логарифмические неравенства (учёт ОДЗ)","pts":25}]},"2026-12-08":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-12-09":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (пунктуация): №17 обособленные определения и обстоятельства","pts":30}]},"2026-12-10":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №15 метод рационализации для логарифмов и модулей","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-12-11":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №25 перебор делителей числа (оптимизация до корня из N)","pts":35},{"title":"Русский (пунктуация): №18 вводные слова и обращения (слова-ловушки)","pts":25}]},"2026-12-12":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №15 комбинированные неравенства из реальных вариантов","pts":40},{"title":"Инфа (Python): №25 поиск чисел по маске (библиотека fnmatch)","pts":30}]},"2026-12-13":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-12-14":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №17 задачи с привязкой к минимальному/максимальному элементу файла","pts":35},{"title":"Профиль (связка): решение пары №13 + №15 на чистовик с проверкой оформления","pts":25}]},"2026-12-15":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-12-16":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (пунктуация): №19 знаки препинания в сложноподчинённом предложении","pts":30}]},"2026-12-17":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (1-я часть): скоростной прогон №1–12 (цель: 25 минут, ноль ошибок)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-12-18":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (скорость): прогон всей 1-й части (№1–16, №18, №22, №23) за 45 минут","pts":35},{"title":"Русский (пунктуация): №20 стык союзов в сложных конструкциях","pts":25}]},"2026-12-19":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): сложные прототипы №13 с ограничением на знаменатель/корень","pts":40},{"title":"Инфа (Python): №25 комбинированные задачи (маски + делимость)","pts":30}]},"2026-12-20":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-12-21":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №24 сложные прототипы с запрещёнными комбинациями символов","pts":35},{"title":"Профиль (2-я часть): №15 неравенства с переменным основанием логарифма","pts":25}]},"2026-12-22":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-12-23":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (пунктуация): №21 пунктуационный анализ (тире, двоеточие, запятая)","pts":30}]},"2026-12-24":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (контроль): закрытие заваленных прототипов №13 и №15 за декабрь","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2026-12-25":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (логика): №15 числовые отрезки, делители и поразрядная конъюнкция","pts":35},{"title":"Русский (грамматика): №8 синтаксические нормы (разбор всех 10 типов ошибок)","pts":25}]},"2026-12-26":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №15 дробно-рациональные неравенства (метод интервалов)","pts":40},{"title":"Инфа (Python): №24 метод двух указателей для поиска подстрок","pts":30}]},"2026-12-27":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2026-12-28":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №24 разбор строк с регулярными выражениями и заменами","pts":35},{"title":"Профиль (2-я часть): №15 показательные неравенства с заменой переменной","pts":25}]},"2026-12-29":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2026-12-30":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (повтор): смешанный тест по блоку №8–21 на скорость и точность","pts":30}]},"2026-12-31":{"p":"ЭТАП 2 // №15 + ПУНКТУАЦИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №15 логарифмические неравенства (учёт ОДЗ)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-01-01":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (теория игр): №19–21 одна куча камней (рекурсивный код на Python)","pts":35},{"title":"Русский (нормы): №4 орфоэпия (ударения) и №5 паронимы","pts":25}]},"2027-01-02":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 экономика — вклады и схемы начисления процентов","pts":40},{"title":"Инфа (теория игр): №19–21 две кучи камней (универсальный шаблон на Python)","pts":30}]},"2027-01-03":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-01-04":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №25 факторизация и поиск простых делителей (решето Эратосфена)","pts":35},{"title":"Профиль (2-я часть): №16 экономика — аннуитетные кредиты (равные платежи)","pts":25}]},"2027-01-05":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-01-06":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (лексика): №6 лексические нормы и №7 морфологические нормы","pts":30}]},"2027-01-07":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 экономика — дифференцированные платежи (таблицы)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-01-08":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 базовые задачи на сортировку и жадные алгоритмы","pts":35},{"title":"Русский (текст): №22–26 смысловой анализ текста и средства выразительности","pts":25}]},"2027-01-09":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 экономика — смешанные схемы выплаты долга","pts":40},{"title":"Инфа (Python): №26 задачи на расписание, заявки и таймлайны","pts":30}]},"2027-01-10":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-01-11":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 упаковка контейнеров и подбор пар элементов","pts":35},{"title":"Профиль (2-я часть): №16 экономика — задачи на оптимальный выбор (производство)","pts":25}]},"2027-01-12":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-01-13":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): формулировка проблемы и авторской позиции","pts":30}]},"2027-01-14":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №19 (пункты а, б) — делимость, чётность и оценка + пример","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-01-15":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (теория игр): №19–21 нестандартные ходы и ограничения на победу","pts":35},{"title":"Русский (сочинение №27): написание комментария с двумя примерами и связкой","pts":25}]},"2027-01-16":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №19 (пункты а, б) — последовательности и прогрессии","pts":40},{"title":"Инфа (скорость): вся 1-я часть + №19–21 за 50 минут без ошибок","pts":30}]},"2027-01-17":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-01-18":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (теория игр): №19–21 одна куча камней (рекурсивный код на Python)","pts":35},{"title":"Профиль (связка): решение блока №13 + №15 + №16 на время (90 минут)","pts":25}]},"2027-01-19":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-01-20":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): обоснование собственной позиции без фактических ошибок","pts":30}]},"2027-01-21":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 нестандартные экономические задачи прошлых лет","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-01-22":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (теория игр): №19–21 две кучи камней (универсальный шаблон на Python)","pts":35},{"title":"Русский (практика): написание полного сочинения №27 по тексту ФИПИ","pts":25}]},"2027-01-23":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №19 (пункты а, б) — задачи на десятичную запись числа","pts":40},{"title":"Инфа (Python): №25 факторизация и поиск простых делителей (решето Эратосфена)","pts":30}]},"2027-01-24":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-01-25":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 базовые задачи на сортировку и жадные алгоритмы","pts":35},{"title":"Профиль (2-я часть): №16 экономика — вклады и схемы начисления процентов","pts":25}]},"2027-01-26":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-01-27":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (тест): прогон всей тестовой части №1–26 за 35 минут","pts":30}]},"2027-01-28":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 экономика — аннуитетные кредиты (равные платежи)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-01-29":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 задачи на расписание, заявки и таймлайны","pts":35},{"title":"Русский (нормы): №4 орфоэпия (ударения) и №5 паронимы","pts":25}]},"2027-01-30":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 экономика — дифференцированные платежи (таблицы)","pts":40},{"title":"Инфа (Python): №26 упаковка контейнеров и подбор пар элементов","pts":30}]},"2027-01-31":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-02-01":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (теория игр): №19–21 нестандартные ходы и ограничения на победу","pts":35},{"title":"Профиль (2-я часть): №16 экономика — смешанные схемы выплаты долга","pts":25}]},"2027-02-02":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-02-03":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (лексика): №6 лексические нормы и №7 морфологические нормы","pts":30}]},"2027-02-04":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 экономика — задачи на оптимальный выбор (производство)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-02-05":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (скорость): вся 1-я часть + №19–21 за 50 минут без ошибок","pts":35},{"title":"Русский (текст): №22–26 смысловой анализ текста и средства выразительности","pts":25}]},"2027-02-06":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №19 (пункты а, б) — делимость, чётность и оценка + пример","pts":40},{"title":"Инфа (теория игр): №19–21 одна куча камней (рекурсивный код на Python)","pts":30}]},"2027-02-07":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-02-08":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (теория игр): №19–21 две кучи камней (универсальный шаблон на Python)","pts":35},{"title":"Профиль (2-я часть): №19 (пункты а, б) — последовательности и прогрессии","pts":25}]},"2027-02-09":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-02-10":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): формулировка проблемы и авторской позиции","pts":30}]},"2027-02-11":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (связка): решение блока №13 + №15 + №16 на время (90 минут)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-02-12":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №25 факторизация и поиск простых делителей (решето Эратосфена)","pts":35},{"title":"Русский (сочинение №27): написание комментария с двумя примерами и связкой","pts":25}]},"2027-02-13":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 нестандартные экономические задачи прошлых лет","pts":40},{"title":"Инфа (Python): №26 базовые задачи на сортировку и жадные алгоритмы","pts":30}]},"2027-02-14":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-02-15":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 задачи на расписание, заявки и таймлайны","pts":35},{"title":"Профиль (2-я часть): №19 (пункты а, б) — задачи на десятичную запись числа","pts":25}]},"2027-02-16":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-02-17":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): обоснование собственной позиции без фактических ошибок","pts":30}]},"2027-02-18":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 экономика — вклады и схемы начисления процентов","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-02-19":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 упаковка контейнеров и подбор пар элементов","pts":35},{"title":"Русский (практика): написание полного сочинения №27 по тексту ФИПИ","pts":25}]},"2027-02-20":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 экономика — аннуитетные кредиты (равные платежи)","pts":40},{"title":"Инфа (теория игр): №19–21 нестандартные ходы и ограничения на победу","pts":30}]},"2027-02-21":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-02-22":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (скорость): вся 1-я часть + №19–21 за 50 минут без ошибок","pts":35},{"title":"Профиль (2-я часть): №16 экономика — дифференцированные платежи (таблицы)","pts":25}]},"2027-02-23":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-02-24":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (тест): прогон всей тестовой части №1–26 за 35 минут","pts":30}]},"2027-02-25":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №16 экономика — смешанные схемы выплаты долга","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-02-26":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (теория игр): №19–21 одна куча камней (рекурсивный код на Python)","pts":35},{"title":"Русский (нормы): №4 орфоэпия (ударения) и №5 паронимы","pts":25}]},"2027-02-27":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №16 экономика — задачи на оптимальный выбор (производство)","pts":40},{"title":"Инфа (теория игр): №19–21 две кучи камней (универсальный шаблон на Python)","pts":30}]},"2027-02-28":{"p":"ЭТАП 3 // ДЖЕНТЛЬМЕНСКИЙ НАБОР","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-03-01":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 моделирование очередей, ячеек хранения и парковок","pts":35},{"title":"Профиль (2-я часть): №18 параметры — линейные и дробно-рациональные уравнения","pts":25}]},"2027-03-02":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-03-03":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): написание сочинения на таймер (90 минут) с проверкой","pts":30}]},"2027-03-04":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №18 параметры — расположение корней квадратного трёхчлена","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-03-05":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №27 базовые задачи на префиксные суммы и остатки (файлы A и B)","pts":35},{"title":"Русский (ловушки): повторение самых сложных исключений в №9–15 и №16–21","pts":25}]},"2027-03-06":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №18 параметры — использование симметрии и чётности функций","pts":40},{"title":"Инфа (Python): №27 кластеризация точек на плоскости и поиск центроидов","pts":30}]},"2027-03-07":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-03-08":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №27 оптимизация перебора (переход от O(N^2) к O(N))","pts":35},{"title":"Профиль (2-я часть): №18 параметры — графический метод в плоскости xOy (окружности)","pts":25}]},"2027-03-09":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-03-10":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (работа с текстом): №1–3 стилистика и №22–26 средства выразительности","pts":30}]},"2027-03-11":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №18 параметры — метод областей в плоскости xOa","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-03-12":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 сложные задачи с двумя параметрами сортировки","pts":35},{"title":"Русский (сочинение №27): разбор речевых и грамматических ошибок (К9–К10)","pts":25}]},"2027-03-13":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (геометрия): №14 стереометрия — расстояния и углы (координатный метод)","pts":40},{"title":"Инфа (скорость): прогон №1–25 на таймер (цель: 75 минут без единого бага)","pts":30}]},"2027-03-14":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-03-15":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №27 задачи на динамическое программирование и окна","pts":35},{"title":"Профиль (геометрия): №14 стереометрия — сечения многогранников и объёмы","pts":25}]},"2027-03-16":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-03-17":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (тест): скоростной прогон №1–26 с разбором каждой сомнительной позиции","pts":30}]},"2027-03-18":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (геометрия): №17 планиметрия — окружности, касательные и подобие","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-03-19":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 моделирование очередей, ячеек хранения и парковок","pts":35},{"title":"Русский (сочинение №27): написание сочинения на таймер (90 минут) с проверкой","pts":25}]},"2027-03-20":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (геометрия): №17 планиметрия — доказательство пункта (а) и счёт в (б)","pts":40},{"title":"Инфа (Python): №27 базовые задачи на префиксные суммы и остатки (файлы A и B)","pts":30}]},"2027-03-21":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-03-22":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №27 кластеризация точек на плоскости и поиск центроидов","pts":35},{"title":"Профиль (комплекс): решение полного джентльменского набора + параметр №18","pts":25}]},"2027-03-23":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-03-24":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (ловушки): повторение самых сложных исключений в №9–15 и №16–21","pts":30}]},"2027-03-25":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №18 параметры — линейные и дробно-рациональные уравнения","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-03-26":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №27 оптимизация перебора (переход от O(N^2) к O(N))","pts":35},{"title":"Русский (работа с текстом): №1–3 стилистика и №22–26 средства выразительности","pts":25}]},"2027-03-27":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №18 параметры — расположение корней квадратного трёхчлена","pts":40},{"title":"Инфа (Python): №26 сложные задачи с двумя параметрами сортировки","pts":30}]},"2027-03-28":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-03-29":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (скорость): прогон №1–25 на таймер (цель: 75 минут без единого бага)","pts":35},{"title":"Профиль (2-я часть): №18 параметры — использование симметрии и чётности функций","pts":25}]},"2027-03-30":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-03-31":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): разбор речевых и грамматических ошибок (К9–К10)","pts":30}]},"2027-04-01":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №18 параметры — графический метод в плоскости xOy (окружности)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-04-02":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №27 задачи на динамическое программирование и окна","pts":35},{"title":"Русский (тест): скоростной прогон №1–26 с разбором каждой сомнительной позиции","pts":25}]},"2027-04-03":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №18 параметры — метод областей в плоскости xOa","pts":40},{"title":"Инфа (Python): №26 моделирование очередей, ячеек хранения и парковок","pts":30}]},"2027-04-04":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-04-05":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №27 базовые задачи на префиксные суммы и остатки (файлы A и B)","pts":35},{"title":"Профиль (геометрия): №14 стереометрия — расстояния и углы (координатный метод)","pts":25}]},"2027-04-06":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-04-07":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (сочинение №27): написание сочинения на таймер (90 минут) с проверкой","pts":30}]},"2027-04-08":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (геометрия): №14 стереометрия — сечения многогранников и объёмы","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-04-09":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №27 кластеризация точек на плоскости и поиск центроидов","pts":35},{"title":"Русский (ловушки): повторение самых сложных исключений в №9–15 и №16–21","pts":25}]},"2027-04-10":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (геометрия): №17 планиметрия — окружности, касательные и подобие","pts":40},{"title":"Инфа (Python): №27 оптимизация перебора (переход от O(N^2) к O(N))","pts":30}]},"2027-04-11":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-04-12":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 сложные задачи с двумя параметрами сортировки","pts":35},{"title":"Профиль (геометрия): №17 планиметрия — доказательство пункта (а) и счёт в (б)","pts":25}]},"2027-04-13":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-04-14":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (работа с текстом): №1–3 стилистика и №22–26 средства выразительности","pts":30}]},"2027-04-15":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (комплекс): решение полного джентльменского набора + параметр №18","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-04-16":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (скорость): прогон №1–25 на таймер (цель: 75 минут без единого бага)","pts":35},{"title":"Русский (сочинение №27): разбор речевых и грамматических ошибок (К9–К10)","pts":25}]},"2027-04-17":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №18 параметры — линейные и дробно-рациональные уравнения","pts":40},{"title":"Инфа (Python): №27 задачи на динамическое программирование и окна","pts":30}]},"2027-04-18":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-04-19":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №26 моделирование очередей, ячеек хранения и парковок","pts":35},{"title":"Профиль (2-я часть): №18 параметры — расположение корней квадратного трёхчлена","pts":25}]},"2027-04-20":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-04-21":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (тест): скоростной прогон №1–26 с разбором каждой сомнительной позиции","pts":30}]},"2027-04-22":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (2-я часть): №18 параметры — использование симметрии и чётности функций","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-04-23":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №27 базовые задачи на префиксные суммы и остатки (файлы A и B)","pts":35},{"title":"Русский (сочинение №27): написание сочинения на таймер (90 минут) с проверкой","pts":25}]},"2027-04-24":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (2-я часть): №18 параметры — графический метод в плоскости xOy (окружности)","pts":40},{"title":"Инфа (Python): №27 кластеризация точек на плоскости и поиск центроидов","pts":30}]},"2027-04-25":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-04-26":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (Python): №27 оптимизация перебора (переход от O(N^2) к O(N))","pts":35},{"title":"Профиль (2-я часть): №18 параметры — метод областей в плоскости xOa","pts":25}]},"2027-04-27":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-04-28":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (ловушки): повторение самых сложных исключений в №9–15 и №16–21","pts":30}]},"2027-04-29":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (геометрия): №14 стереометрия — расстояния и углы (координатный метод)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-04-30":{"p":"ЭТАП 4 // ПАРАМЕТРЫ + ГЕОМЕТРИЯ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (Python): №26 сложные задачи с двумя параметрами сортировки","pts":35},{"title":"Русский (работа с текстом): №1–3 стилистика и №22–26 средства выразительности","pts":25}]},"2027-05-01":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): чистовик 2-й части (№13, №15, №16) с жёсткой проверкой ОДЗ","pts":40},{"title":"Инфа (финиш): полный вариант за компом на таймер (проверка граничных случаев)","pts":30}]},"2027-05-02":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-05-03":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): отработка №24–27 (проверка чтения файлов и типов данных)","pts":35},{"title":"Профиль (финиш): повторение прототипов №18 (параметры) и №19 (а, б)","pts":25}]},"2027-05-04":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-05-05":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): полный вариант на таймер (тест за 30 мин + сочинение №27)","pts":30}]},"2027-05-06":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): прогон №1–12 на 100% точность (проверка вычислений)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-05-07":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (финиш): быстрый прогон №1–23 без использования калькулятора","pts":35},{"title":"Русский (финиш): повторение словарных слов №4, №5, №9–15","pts":25}]},"2027-05-08":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): разбор сложных заданий из актуальных сборников ФИПИ","pts":40},{"title":"Инфа (финиш): повторение шаблонов кода для №2, №6, №14, №19–21","pts":30}]},"2027-05-09":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-05-10":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): полный вариант за компом на таймер (проверка граничных случаев)","pts":35},{"title":"Профиль (финиш): зачистка Банка ошибок по всем темам года","pts":25}]},"2027-05-11":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-05-12":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): отработка универсальных связок и клише для сочинения №27","pts":30}]},"2027-05-13":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): чистовик 2-й части (№13, №15, №16) с жёсткой проверкой ОДЗ","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-05-14":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (финиш): отработка №24–27 (проверка чтения файлов и типов данных)","pts":35},{"title":"Русский (финиш): зачистка сложных случаев в №8 и №21","pts":25}]},"2027-05-15":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): повторение прототипов №18 (параметры) и №19 (а, б)","pts":40},{"title":"Инфа (финиш): быстрый прогон №1–23 без использования калькулятора","pts":30}]},"2027-05-16":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-05-17":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): повторение шаблонов кода для №2, №6, №14, №19–21","pts":35},{"title":"Профиль (финиш): прогон №1–12 на 100% точность (проверка вычислений)","pts":25}]},"2027-05-18":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-05-19":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): полный вариант на таймер (тест за 30 мин + сочинение №27)","pts":30}]},"2027-05-20":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): разбор сложных заданий из актуальных сборников ФИПИ","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-05-21":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (финиш): полный вариант за компом на таймер (проверка граничных случаев)","pts":35},{"title":"Русский (финиш): повторение словарных слов №4, №5, №9–15","pts":25}]},"2027-05-22":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): зачистка Банка ошибок по всем темам года","pts":40},{"title":"Инфа (финиш): отработка №24–27 (проверка чтения файлов и типов данных)","pts":30}]},"2027-05-23":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: ПРОФИЛЬНАЯ МАТЕМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ПРОФИЛЬНАЯ МАТЕМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-05-24":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): быстрый прогон №1–23 без использования калькулятора","pts":35},{"title":"Профиль (финиш): чистовик 2-й части (№13, №15, №16) с жёсткой проверкой ОДЗ","pts":25}]},"2027-05-25":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-05-26":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): отработка универсальных связок и клише для сочинения №27","pts":30}]},"2027-05-27":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): повторение прототипов №18 (параметры) и №19 (а, б)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-05-28":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (финиш): повторение шаблонов кода для №2, №6, №14, №19–21","pts":35},{"title":"Русский (финиш): зачистка сложных случаев в №8 и №21","pts":25}]},"2027-05-29":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): прогон №1–12 на 100% точность (проверка вычислений)","pts":40},{"title":"Инфа (финиш): полный вариант за компом на таймер (проверка граничных случаев)","pts":30}]},"2027-05-30":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: ИНФОРМАТИКА","t":[{"title":"Полный пробник ЕГЭ по таймеру (ИНФОРМАТИКА) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-05-31":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): отработка №24–27 (проверка чтения файлов и типов данных)","pts":35},{"title":"Профиль (финиш): разбор сложных заданий из актуальных сборников ФИПИ","pts":25}]},"2027-06-01":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-06-02":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): полный вариант на таймер (тест за 30 мин + сочинение №27)","pts":30}]},"2027-06-03":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): зачистка Банка ошибок по всем темам года","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]},"2027-06-04":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + РУССКИЙ","t":[{"title":"Школа (08:00–13:30): закрытие учебной недели","pts":15},{"title":"Инфа (финиш): быстрый прогон №1–23 без использования калькулятора","pts":35},{"title":"Русский (финиш): повторение словарных слов №4, №5, №9–15","pts":25}]},"2027-06-05":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ 2-Я ЧАСТЬ + ИНФА","t":[{"title":"Профиль (финиш): чистовик 2-й части (№13, №15, №16) с жёсткой проверкой ОДЗ","pts":40},{"title":"Инфа (финиш): повторение шаблонов кода для №2, №6, №14, №19–21","pts":30}]},"2027-06-06":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОБНИК: РУССКИЙ ЯЗЫК","t":[{"title":"Полный пробник ЕГЭ по таймеру (РУССКИЙ ЯЗЫК) без подсказок","pts":50},{"title":"Банк ошибок (45 мин): выписать и прорешать заваленные номера","pts":35}]},"2027-06-07":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ИНФОРМАТИКА + ПРОФИЛЬ","t":[{"title":"Школа (08:00–13:30): отработать уроки без залипания","pts":15},{"title":"Инфа (финиш): полный вариант за компом на таймер (проверка граничных случаев)","pts":35},{"title":"Профиль (финиш): повторение прототипов №18 (параметры) и №19 (а, б)","pts":25}]},"2027-06-08":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"ПРОФИЛЬ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + проверка домашки перед занятием","pts":15},{"title":"Репетитор по профилю (17:00) + 4 км пешком туда-обратно","pts":35},{"title":"Закрепление (30 мин): решить 3 аналогичные задачи по теме урока","pts":25}]},"2027-06-09":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РУССКИЙ // РЕПЕТИТОР 17:00","t":[{"title":"Школа (08:00–13:30) + повторение правил перед занятием","pts":15},{"title":"Репетитор по русскому (17:00): тест и критерии сочинения","pts":35},{"title":"Русский (финиш): отработка универсальных связок и клише для сочинения №27","pts":30}]},"2027-06-10":{"p":"ЭТАП 5 // ФИНИШ И ПРОБНИКИ","f":"РАННИЙ СТАРТ + ПРОФИЛЬ 16:00","t":[{"title":"Короткий день в школе (до 12:40): ранний старт бота в 13:30","pts":20},{"title":"Профиль (финиш): прогон №1–12 на 100% точность (проверка вычислений)","pts":35},{"title":"Репетитор по профилю (16:00): плотный разбор 2-й части","pts":35}]}};
+
+    function formatDateKey(d) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
 
     function getTodayKey() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      return formatDateKey(new Date());
+    }
+
+    let yearPlanDB = Object.assign({}, EMBEDDED_PLAN_DB);
+
+    function tryFetchExternalPlan() {
+      fetch('./plan.json?v=' + Date.now())
+        .then(res => {
+          if (!res.ok) throw new Error('no external plan');
+          return res.json();
+        })
+        .then(extData => {
+          if (extData && typeof extData === 'object') {
+            Object.assign(yearPlanDB, extData);
+            renderAll();
+          }
+        })
+        .catch(() => {});
     }
 
     const DEFAULT_STATE = {
@@ -1179,6 +1201,7 @@
       relapses: 0,
       stepsToday: 0,
       completedToday: [],
+      completedStudyByDate: {},
       weeklyCompleted: [],
       bossCompleted: [],
       inventory: [],
@@ -1205,13 +1228,13 @@
       const st = Object.assign({}, DEFAULT_STATE, parsed || {});
       st.stats = Object.assign({ INT: 0, TECH: 0, VIT: 0, DISC: 0 }, st.stats || {});
       if (!Array.isArray(st.completedToday)) st.completedToday = [];
+      if (!st.completedStudyByDate || typeof st.completedStudyByDate !== 'object') st.completedStudyByDate = {};
       if (!Array.isArray(st.weeklyCompleted)) st.weeklyCompleted = [];
       if (!Array.isArray(st.bossCompleted)) st.bossCompleted = [];
       if (!Array.isArray(st.inventory)) st.inventory = [];
       if (!Array.isArray(st.photoArchive)) st.photoArchive = [];
       if (!st.canPrice || st.canPrice === 135) st.canPrice = 95;
 
-      // Ежедневная смена задания по фото при наступлении нового дня
       const today = getTodayKey();
       if (st.photoDateKey !== today) {
         st.photoDateKey = today;
@@ -1222,6 +1245,7 @@
     }
 
     let state = loadState();
+    let selectedDateKey = getTodayKey();
     let currentTab = 'quests';
     let currentQuestMode = 'daily';
     let currentCatFilter = 'all';
@@ -1231,7 +1255,6 @@
       localStorage.setItem('lifeos_state', JSON.stringify(state));
     }
 
-    // ==================== TOAST ====================
     let toastTimer = null;
     function showToast(msg) {
       const el = document.getElementById('toast');
@@ -1241,19 +1264,17 @@
       toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
 
-    // ==================== RENDER HEADER & MOTIVATION ====================
     function renderHeader() {
       const now = new Date();
       const daysRu = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
       const dd = String(now.getDate()).padStart(2, '0');
       const mm = String(now.getMonth() + 1).padStart(2, '0');
-      document.getElementById('headerDate').textContent = `${dd} / ${mm} • ${daysRu[now.getDay()]}`;
+      document.getElementById('headerDate').textContent = `${dd} / ${mm} // ${daysRu[now.getDay()]}`;
 
       document.getElementById('ptsDisplay').textContent = `${state.pts} PTS`;
-      document.getElementById('streakDisplay').textContent = `🔥 ${state.streak} ДН.`;
-      document.getElementById('canPricePill').textContent = `⚡ ${state.canPrice}₽ ✎`;
+      document.getElementById('streakDisplay').textContent = `[STRK: ${state.streak}]`;
+      document.getElementById('canPricePill').textContent = `[${state.canPrice} RUB]`;
 
-      // Rank calculation
       let currentRank = RANKS[0];
       let nextRank = RANKS[RANKS.length - 1];
       for (let i = 0; i < RANKS.length; i++) {
@@ -1285,20 +1306,52 @@
           state.canPrice = num;
           saveState();
           renderAll();
-          showToast(`⚡ Цена банки обновлена: ${num} ₽`);
+          showToast(`[SYS] Цена банки обновлена: ${num} RUB`);
         }
       }
     }
 
-    // ==================== STEPS & PHOTO WIDGETS ====================
+    function shiftSelectedDate(deltaDays) {
+      const parts = selectedDateKey.split('-').map(Number);
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      d.setDate(d.getDate() + deltaDays);
+      const nextKey = formatDateKey(d);
+      if (yearPlanDB[nextKey]) {
+        selectedDateKey = nextKey;
+        renderAll();
+      } else {
+        showToast('[SYS] Достигнута граница календарного плана');
+      }
+    }
+
+    function resetSelectedDateToToday() {
+      selectedDateKey = getTodayKey();
+      renderAll();
+    }
+
     function renderWidgets() {
-      // Steps
+      const parts = selectedDateKey.split('-').map(Number);
+      const selDate = new Date(parts[0], parts[1] - 1, parts[2]);
+      const daysRu = ['ВС', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+      const dd = String(selDate.getDate()).padStart(2, '0');
+      const mm = String(selDate.getMonth() + 1).padStart(2, '0');
+      const isToday = selectedDateKey === getTodayKey();
+
+      document.getElementById('schedDateLabel').textContent = `${dd}.${mm} ${daysRu[selDate.getDay()]} ${isToday ? '// СЕГОДНЯ' : '// ВЕРНУТЬСЯ'}`;
+
+      const dayEntry = yearPlanDB[selectedDateKey] || {
+        p: "ВНЕ КАЛЕНДАРЯ",
+        f: "СВОБОДНЫЙ РЕЖИМ",
+        t: []
+      };
+      document.getElementById('schedPhaseLabel').textContent = dayEntry.p;
+      document.getElementById('schedFocusLabel').textContent = dayEntry.f;
+
       const steps = state.stepsToday || 0;
       document.getElementById('stepsCountBadge').textContent = `${steps.toLocaleString('ru-RU')} / 10 000`;
       const pct = Math.min(100, Math.round((steps / 10000) * 100));
       document.getElementById('stepsFill').style.width = `${pct}%`;
 
-      // Photo
       const idea = PHOTO_IDEAS[state.todayPhotoIdx % PHOTO_IDEAS.length];
       document.getElementById('photoCatBadge').textContent = idea.cat;
       document.getElementById('photoPromptText').textContent = idea.title;
@@ -1307,10 +1360,10 @@
       const isPhotoDone = state.completedToday.includes('d_photo_day');
       const snapBtn = document.getElementById('btnSnapPhoto');
       if (isPhotoDone) {
-        snapBtn.textContent = '✔ КАДР В АРХИВЕ';
+        snapBtn.textContent = '[КАДР В АРХИВЕ]';
         snapBtn.classList.add('done');
       } else {
-        snapBtn.textContent = '📸 СНЯЛ (+25 PTS)';
+        snapBtn.textContent = '[СНЯЛ +25 PTS]';
         snapBtn.classList.remove('done');
       }
     }
@@ -1338,15 +1391,15 @@
     function checkStepQuests() {
       let autoDone = false;
       if (state.stepsToday >= 6000 && !state.completedToday.includes('d_steps_6k')) {
-        toggleQuest('d_steps_6k', 'daily', true);
+        toggleGeneralQuest('d_steps_6k', 'daily');
         autoDone = true;
       }
       if (state.stepsToday >= 10000 && !state.completedToday.includes('d_steps_10k')) {
-        toggleQuest('d_steps_10k', 'daily', true);
+        toggleGeneralQuest('d_steps_10k', 'daily');
         autoDone = true;
       }
       if (!autoDone) {
-        showToast(`👟 Шаги обновлены: ${state.stepsToday.toLocaleString('ru-RU')}`);
+        showToast(`[ШАГИ] Обновлено: ${state.stepsToday.toLocaleString('ru-RU')}`);
       }
     }
 
@@ -1359,7 +1412,7 @@
     function completePhotoDaily() {
       const idea = PHOTO_IDEAS[state.todayPhotoIdx % PHOTO_IDEAS.length];
       if (!state.completedToday.includes('d_photo_day')) {
-        toggleQuest('d_photo_day', 'daily', true);
+        toggleGeneralQuest('d_photo_day', 'daily');
         state.photoArchive.unshift({
           date: getTodayKey(),
           title: idea.title
@@ -1367,11 +1420,10 @@
         saveState();
         renderAll();
       } else {
-        showToast('📸 Кадр дня уже засчитан!');
+        showToast('[SYS] Кадр дня уже засчитан');
       }
     }
 
-    // ==================== QUESTS RENDER & TOGGLE ====================
     function setQuestMode(mode, btn) {
       currentQuestMode = mode;
       document.querySelectorAll('#tab-quests .mode-btn').forEach(b => b.classList.remove('active'));
@@ -1400,49 +1452,83 @@
       const listEl = document.getElementById('questList');
       listEl.innerHTML = '';
 
-      let items = [];
-      let completedArr = [];
-      const todayDow = new Date().getDay();
-
       if (currentQuestMode === 'daily') {
-        items = DAILY_QUESTS.filter(q => currentCatFilter === 'all' || q.cat === currentCatFilter);
-        // Сортируем так, чтобы квесты по расписанию на сегодня были сверху
-        items = [...items].sort((a, b) => {
-          const aHot = a.days && a.days.includes(todayDow) ? 1 : 0;
-          const bHot = b.days && b.days.includes(todayDow) ? 1 : 0;
-          return bHot - aHot;
+        if (currentCatFilter === 'all' || currentCatFilter === 'study') {
+          const dayEntry = yearPlanDB[selectedDateKey];
+          const doneIndices = state.completedStudyByDate[selectedDateKey] || [];
+
+          if (dayEntry && Array.isArray(dayEntry.t)) {
+            dayEntry.t.forEach((taskItem, idx) => {
+              const title = typeof taskItem === 'string' ? taskItem : taskItem.title;
+              const pts = typeof taskItem === 'string' ? 30 : (taskItem.pts || 30);
+              const isDone = doneIndices.includes(idx);
+
+              const card = document.createElement('div');
+              card.className = `quest-card study-hot ${isDone ? 'completed' : ''}`;
+              card.onclick = () => toggleStudyTask(selectedDateKey, idx, pts);
+
+              card.innerHTML = `
+                <div class="q-check">${isDone ? 'OK' : ''}</div>
+                <div class="q-body">
+                  <div class="q-tags">
+                    <span class="q-tag hot">[ПЛАН ЕГЭ // ${selectedDateKey.slice(5)}]</span>
+                    <span class="q-tag stat">+INT</span>
+                  </div>
+                  <div class="q-title">${title}</div>
+                  <div class="q-desc">${dayEntry.f}</div>
+                </div>
+                <div class="q-pts">+${pts}</div>
+              `;
+              listEl.appendChild(card);
+            });
+          }
+        }
+
+        const catLabels = {
+          sport: '[СПОРТ]',
+          code: '[КОД / DAVINCI]',
+          home: '[БЫТ]',
+          vibe: '[ВАЙБ / УХОД]'
+        };
+
+        const filteredGeneral = GENERAL_DAILIES.filter(q => currentCatFilter === 'all' || q.cat === currentCatFilter);
+        filteredGeneral.forEach(q => {
+          const isDone = state.completedToday.includes(q.id);
+          const card = document.createElement('div');
+          card.className = `quest-card ${isDone ? 'completed' : ''}`;
+          card.onclick = () => toggleGeneralQuest(q.id, 'daily');
+
+          card.innerHTML = `
+            <div class="q-check">${isDone ? 'OK' : ''}</div>
+            <div class="q-body">
+              <div class="q-tags">
+                <span class="q-tag">${catLabels[q.cat]}</span>
+                <span class="q-tag stat">+${q.stat}</span>
+              </div>
+              <div class="q-title">${q.title}</div>
+              <div class="q-desc">${q.desc}</div>
+            </div>
+            <div class="q-pts">+${q.pts}</div>
+          `;
+          listEl.appendChild(card);
         });
-        completedArr = state.completedToday;
-      } else if (currentQuestMode === 'weekly') {
-        items = WEEKLY_QUESTS;
-        completedArr = state.weeklyCompleted;
-      } else {
-        items = BOSS_QUESTS;
-        completedArr = state.bossCompleted;
+
+        return;
       }
 
-      const catNames = {
-        study: '🎓 УЧЁБА',
-        sport: '💪 СПОРТ',
-        code: '💻 КОД / DAVINCI',
-        home: '🧹 БЫТ',
-        vibe: '📸 ВАЙБ'
-      };
+      const items = currentQuestMode === 'weekly' ? WEEKLY_QUESTS : BOSS_QUESTS;
+      const completedArr = currentQuestMode === 'weekly' ? state.weeklyCompleted : state.bossCompleted;
 
       items.forEach(q => {
         const isDone = completedArr.includes(q.id);
-        const isHot = currentQuestMode === 'daily' && q.days && q.days.includes(todayDow);
-
         const card = document.createElement('div');
-        card.className = `quest-card ${isDone ? 'completed' : ''} ${isHot && !isDone ? 'today-hot' : ''}`;
-        card.onclick = () => toggleQuest(q.id, currentQuestMode);
+        card.className = `quest-card ${isDone ? 'completed' : ''}`;
+        card.onclick = () => toggleGeneralQuest(q.id, currentQuestMode);
 
         card.innerHTML = `
-          <div class="q-check">${isDone ? '✔' : ''}</div>
+          <div class="q-check">${isDone ? 'OK' : ''}</div>
           <div class="q-body">
             <div class="q-tags">
-              ${isHot ? '<span class="q-tag hot">⚡ СЕГОДНЯ ПО РАСПИСАНИЮ</span>' : ''}
-              ${q.cat ? `<span class="q-tag">${catNames[q.cat]}</span>` : ''}
               <span class="q-tag stat">+${q.stat}</span>
             </div>
             <div class="q-title">${q.title}</div>
@@ -1454,8 +1540,33 @@
       });
     }
 
-    function toggleQuest(id, mode, silentAuto = false) {
-      let pool = DAILY_QUESTS;
+    function toggleStudyTask(dateKey, idx, pts) {
+      if (!state.completedStudyByDate[dateKey]) {
+        state.completedStudyByDate[dateKey] = [];
+      }
+      const arr = state.completedStudyByDate[dateKey];
+      const pos = arr.indexOf(idx);
+
+      if (pos === -1) {
+        arr.push(idx);
+        state.pts += pts;
+        state.totalXp += pts;
+        state.stats.INT = (state.stats.INT || 0) + pts;
+        showToast(`[ЕГЭ] Пункт плана закрыт: +${pts} PTS (+INT)`);
+      } else {
+        arr.splice(pos, 1);
+        state.pts = Math.max(0, state.pts - pts);
+        state.totalXp = Math.max(0, state.totalXp - pts);
+        state.stats.INT = Math.max(0, (state.stats.INT || 0) - pts);
+        showToast(`[ОТМЕНА] -${pts} PTS`);
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function toggleGeneralQuest(id, mode) {
+      let pool = GENERAL_DAILIES;
       let targetArr = state.completedToday;
 
       if (mode === 'weekly') {
@@ -1471,7 +1582,6 @@
 
       const idx = targetArr.indexOf(id);
       if (idx === -1) {
-        // Выполняем
         targetArr.push(id);
         state.pts += quest.pts;
         state.totalXp += quest.pts;
@@ -1479,12 +1589,11 @@
 
         if (id === 'd_no_energy') {
           state.cleanDays += 1;
-          showToast(`⚡ Чистый день! +${quest.pts} PTS и +${state.canPrice}₽ в копилку.`);
+          showToast(`[ЧИСТЫЙ ДЕНЬ] +${quest.pts} PTS и +${state.canPrice} RUB в копилку`);
         } else {
-          showToast(`🎯 Закрыто: +${quest.pts} PTS (${quest.stat})`);
+          showToast(`[ВЫПОЛНЕНО] +${quest.pts} PTS (${quest.stat})`);
         }
       } else {
-        // Отмена случайного нажатия
         targetArr.splice(idx, 1);
         state.pts = Math.max(0, state.pts - quest.pts);
         state.totalXp = Math.max(0, state.totalXp - quest.pts);
@@ -1493,7 +1602,7 @@
         if (id === 'd_no_energy') {
           state.cleanDays = Math.max(0, state.cleanDays - 1);
         }
-        showToast(`↩️ Отменено: -${quest.pts} PTS`);
+        showToast(`[ОТМЕНА] -${quest.pts} PTS`);
       }
 
       saveState();
@@ -1501,16 +1610,18 @@
     }
 
     function finishDay() {
-      const doneCount = state.completedToday.length;
-      if (doneCount < 3) {
-        if (!confirm(`Сегодня закрыто всего ${doneCount} квеста (нужно минимум 3 для роста стрика). Сбросить дейлики на новый день без роста стрика?`)) {
+      const todayStudyDone = (state.completedStudyByDate[getTodayKey()] || []).length;
+      const totalDone = state.completedToday.length + todayStudyDone;
+
+      if (totalDone < 3) {
+        if (!confirm(`Сегодня закрыто всего ${totalDone} пункта (нужно минимум 3 для роста стрика). Сбросить дейлики на новый день без роста стрика?`)) {
           return;
         }
       } else {
         state.streak += 1;
         state.pts += 30;
         state.totalXp += 30;
-        showToast(`🔥 День завершён! Стрик: ${state.streak} дн. (+30 PTS бонус)`);
+        showToast(`[ДЕНЬ ЗАКРЫТ] Стрик: ${state.streak} дн. (+30 PTS бонус)`);
       }
 
       state.completedToday = [];
@@ -1525,7 +1636,6 @@
       if (confirm('Зафиксировать покупку банки без купона? Спишется 40 PTS.')) {
         state.relapses += 1;
         state.pts = Math.max(0, state.pts - 40);
-        // Если стояла галочка чистого дня — снимаем
         const idx = state.completedToday.indexOf('d_no_energy');
         if (idx !== -1) {
           state.completedToday.splice(idx, 1);
@@ -1533,11 +1643,10 @@
         }
         saveState();
         renderAll();
-        showToast('⚡ Срыв зафиксирован (-40 PTS). Завтра вернёшь контроль.');
+        showToast('[СРЫВ] Списано 40 PTS. Завтра вернёшь контроль.');
       }
     }
 
-    // ==================== SHOP & INVENTORY ====================
     function setShopSub(sub) {
       currentShopSub = sub;
       document.getElementById('shopSubStore').classList.toggle('active', sub === 'store');
@@ -1605,7 +1714,7 @@
 
       saveState();
       renderAll();
-      showToast(`🛒 Куплено! Купон упал в Инвентарь.`);
+      showToast('[МАГАЗИН] Куплено! Купон добавлен в Инвентарь.');
     }
 
     function useInventoryItem(index) {
@@ -1616,16 +1725,15 @@
         state.inventory.splice(index, 1);
         if (item.id === 's_cheat_day') {
           state.streak += 1;
-          showToast('👑 Чит-дей активирован! Стрик защищён и увеличен.');
+          showToast('[VIP] Чит-дей активирован! Стрик защищён.');
         } else {
-          showToast(`✅ Активировано: ${item.title}`);
+          showToast(`[АКТИВИРОВАНО] ${item.title}`);
         }
         saveState();
         renderAll();
       }
     }
 
-    // ==================== STATS & BACKUP ====================
     function renderStats() {
       ['INT', 'TECH', 'VIT', 'DISC'].forEach(key => {
         const xp = state.stats[key] || 0;
@@ -1639,12 +1747,12 @@
 
       document.getElementById('statCanPrice').textContent = state.canPrice;
       document.getElementById('eCleanDays').textContent = state.cleanDays;
-      document.getElementById('eSavedMoney').textContent = `${(state.cleanDays * state.canPrice).toLocaleString('ru-RU')} ₽`;
+      document.getElementById('eSavedMoney').textContent = `${(state.cleanDays * state.canPrice).toLocaleString('ru-RU')} RUB`;
       document.getElementById('eRelapses').textContent = state.relapses;
 
       const archEl = document.getElementById('photoArchiveList');
       if (state.photoArchive.length === 0) {
-        archEl.innerHTML = `<div style="font-size: 12px; color: var(--muted);">Пока пусто. Закрой «Кадр дня» на главной вкладке.</div>`;
+        archEl.innerHTML = `<div style="font-size: 12px; color: var(--muted);">Пока пусто. Закрой Кадр дня на главной вкладке.</div>`;
       } else {
         archEl.innerHTML = state.photoArchive.slice(0, 15).map(p =>
           `<div class="archive-item"><span>[${p.date}]</span>${p.title}</div>`
@@ -1652,11 +1760,24 @@
       }
     }
 
+    function downloadPlanJson() {
+      const blob = new Blob([JSON.stringify(yearPlanDB, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'plan.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('[SYS] Файл plan.json сформирован и скачан');
+    }
+
     function exportSave() {
       const code = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(() => {
-          showToast('📋 Код сейва скопирован в буфер обмена!');
+          showToast('[SYS] Код сейва скопирован в буфер обмена');
         }).catch(() => {
           prompt('Скопируй этот код сейва вручную:', code);
         });
@@ -1675,7 +1796,7 @@
           state = Object.assign({}, DEFAULT_STATE, parsed);
           saveState();
           renderAll();
-          showToast('📥 Сейв успешно восстановлен!');
+          showToast('[SYS] Сейв успешно восстановлен');
         } else {
           alert('Неверный формат сейва.');
         }
@@ -1691,12 +1812,11 @@
           state = Object.assign({}, DEFAULT_STATE);
           saveState();
           renderAll();
-          showToast('⚠️ Прогресс обнулён.');
+          showToast('[SYS] Прогресс обнулён');
         }
       }
     }
 
-    // ==================== NAVIGATION ====================
     function switchTab(tab, btn) {
       currentTab = tab;
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -1717,8 +1837,8 @@
       renderStats();
     }
 
-    // INIT
     renderAll();
+    tryFetchExternalPlan();
   </script>
 </body>
 </html>
